@@ -126,9 +126,6 @@ class servo_controller:
         print("[ID:%03d] PresPos:%03d PresSpd:%03d" 
               % (SCS_ID, scs_present_position, SCS_TOHOST(scs_present_speed, 15)))
 
-
-
-
     def deactivateTorque(self):
 
         scs_comm_result, scs_error = self.packetHandler.write1ByteTxRx(self.portHandler, SCS_ID, ADDR_SCS_TORQUE_ENABLE, 0)
