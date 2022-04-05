@@ -41,10 +41,19 @@ servo_config =dict(\
                 servo_control_table=dic_servo_control_table           
                 )
 
+def DumpServoConfig():
+    # Serializing json 
+    json_object = json.dumps(servo_config, indent = 4)
+    # Writing to sample.json
+    with open("servo_config.json", "w") as outfile:
+        outfile.write(json_object)
 
+def LoadServoConfig():
+        with open("servo_config.json", "r") as fObj:
+            servo_config = json.load(fObj)
+            print("servo_config:")
+            print(servo_config)
 
-# Serializing json 
-json_object = json.dumps(servo_config, indent = 4)
-# Writing to sample.json
-with open("servo_config.json", "w") as outfile:
-    outfile.write(json_object)
+if __name__ == '__main__':
+    #DumpServoConfig()
+    LoadServoConfig()
