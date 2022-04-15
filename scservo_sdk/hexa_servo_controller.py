@@ -17,7 +17,6 @@ def getch():
     return ch
 
 
-# todo: add port as argument, to make multiple servo works
 class servo_controller:
     
     def __init__(self):    
@@ -57,7 +56,7 @@ class servo_controller:
             #print(servo_config)
 
             #1. parse serial params
-            self.SCS_ID = servo_config['serial_params']['SCS_ID']
+            #self.SCS_ID = servo_config['serial_params']['SCS_ID']
             self.BAUDRATE = servo_config['serial_params']['BAUDRATE']
             self.DEVICENAME = servo_config['serial_params']['DEVICENAME']
 
@@ -80,41 +79,41 @@ class servo_controller:
             self.ADDR_SCS_GOAL_SPEED = servo_config['servo_control_table']['ADDR_SCS_GOAL_SPEED']
             self.ADDR_SCS_PRESENT_POSITION = servo_config['servo_control_table']['ADDR_SCS_PRESENT_POSITION']
 
-    def setAcc(self):
+    def setAcc(self,servo_id = 1):
         # Write SCServo acc
         scs_comm_result, scs_error = self.packetHandler.write1ByteTxRx(\
-            self.portHandler, self.SCS_ID, self.ADDR_SCS_GOAL_ACC, self.SCS_MOVING_ACC)
+            self.portHandler, servo_id, self.ADDR_SCS_GOAL_ACC, self.SCS_MOVING_ACC)
         if scs_comm_result != COMM_SUCCESS:
             print("%s" % self.packetHandler.getTxRxResult(scs_comm_result))
         elif scs_error != 0:
             print("%s" % self.packetHandler.getRxPacketError(scs_error))
 
-    def setSpeed(self,speed_val=0):
+    def setSpeed(self,speed_val=0,servo_id = 1):
 
         # Write SCServo speed
         scs_comm_result, scs_error = self.packetHandler.write2ByteTxRx\
-            (self.portHandler, self.SCS_ID, self.ADDR_SCS_GOAL_SPEED, speed_val)
+            (self.portHandler, servo_id, self.ADDR_SCS_GOAL_SPEED, speed_val)
         if scs_comm_result != COMM_SUCCESS:
             print("%s" % self.packetHandler.getTxRxResult(scs_comm_result))
         elif scs_error != 0:
             print("%s" % self.packetHandler.getRxPacketError(scs_error))
 
-    def setPosition(self,position_val=0):
+    def setPosition(self,position_val=0,servo_id = 1):
 
             # Write SCServo goal position
             scs_comm_result, scs_error = \
                 self.packetHandler.write2ByteTxRx\
-                (self.portHandler, self.SCS_ID, self.ADDR_SCS_GOAL_POSITION,position_val)
+                (self.portHandler, servo_id, self.ADDR_SCS_GOAL_POSITION,position_val)
             if scs_comm_result != COMM_SUCCESS:
                 print("%s" % self.packetHandler.getTxRxResult(scs_comm_result))
             elif scs_error != 0:
                 print("%s" % self.packetHandler.getRxPacketError(scs_error))
 
-    def getPoseSpeed(self):
+    def getPoseSpeed(self,servo_id = 1):
         
         scs_present_position_speed, scs_comm_result, scs_error =\
             self.packetHandler.read4ByteTxRx(\
-            self.portHandler, self.SCS_ID, self.ADDR_SCS_PRESENT_POSITION)
+            self.portHandler, servo_id, self.ADDR_SCS_PRESENT_POSITION)
         if scs_comm_result != COMM_SUCCESS:
             print(self.packetHandler.getTxRxResult(scs_comm_result))
         elif scs_error != 0:
@@ -123,12 +122,12 @@ class servo_controller:
         scs_present_position = SCS_LOWORD(scs_present_position_speed)
         scs_present_speed = SCS_HIWORD(scs_present_position_speed)
         print("[ID:%03d] PresPos:%03d PresSpd:%03d" 
-              % (self.SCS_ID, scs_present_position, SCS_TOHOST(scs_present_speed, 15)))
+              % (servo_id, scs_present_position, SCS_TOHOST(scs_present_speed, 15)))
 
-    def deactivateTorque(self):
+    def deactivateTorque(self,servo_id = 1):
 
         scs_comm_result, scs_error = self.packetHandler.write1ByteTxRx(\
-            self.portHandler, self.SCS_ID, self.ADDR_SCS_TORQUE_ENABLE, 0)
+            self.portHandler, servo_id, self.ADDR_SCS_TORQUE_ENABLE, 0)
         if scs_comm_result != COMM_SUCCESS:
             print("%s" % self.packetHandler.getTxRxResult(scs_comm_result))
         elif scs_error != 0:
