@@ -80,6 +80,17 @@ class servo_controller:
 
             self.ADDR_TORQUE_LIMIT = servo_config['servo_control_table']['ADDR_TORQUE_LIMIT']
             self.ADDR_CURRENT_TORQUE_VAL = servo_config['servo_control_table']['ADDR_CURRENT_TORQUE_VAL']
+    
+    def setTorque(self,torque_val=200,servo_id = 1):
+        # Write SCServo speed
+        scs_comm_result, scs_error = self.packetHandler.write2ByteTxRx\
+            (self.portHandler, servo_id, self.ADDR_TORQUE_LIMIT, torque_val)
+        if scs_comm_result != COMM_SUCCESS:
+            print("%s" % self.packetHandler.getTxRxResult(scs_comm_result))
+        elif scs_error != 0:
+            print("%s" % self.packetHandler.getRxPacketError(scs_error))
+
+    
     def setAcc(self,servo_id = 1):
         # Write SCServo acc
         scs_comm_result, scs_error = self.packetHandler.write1ByteTxRx(\
