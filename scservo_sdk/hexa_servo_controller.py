@@ -19,8 +19,8 @@ def getch():
 
 class servo_controller:
     
-    def __init__(self):    
-        self.parseServoConfig()
+    def __init__(self,servo_config_file = "servo_config.json"):    
+        self.parseServoConfig(servo_config_file)
         self.openPort()
     def openPort(self):        
         # Initialize PortHandler instance
