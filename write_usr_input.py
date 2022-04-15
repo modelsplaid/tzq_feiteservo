@@ -2,6 +2,8 @@
 import os
 import json
 from scservo_sdk import hexa_servo_controller 
+import time
+
 if os.name == 'nt':
     import msvcrt
     def getch():
@@ -37,3 +39,7 @@ if __name__ == '__main__':
         servoCtl.setPosition(servo_pose,servo_id)
         servoCtl.setSpeed(servo_speed,servo_id)
         servoCtl.getPoseSpeed(servo_id)
+
+        for i in range(50): 
+            time.sleep(0.1)
+            servoCtl.getPresentTorque(servo_id)

@@ -56,7 +56,6 @@ class servo_controller:
             #print(servo_config)
 
             #1. parse serial params
-            #self.SCS_ID = servo_config['serial_params']['SCS_ID']
             self.BAUDRATE = servo_config['serial_params']['BAUDRATE']
             self.DEVICENAME = servo_config['serial_params']['DEVICENAME']
 
@@ -79,6 +78,8 @@ class servo_controller:
             self.ADDR_SCS_GOAL_SPEED = servo_config['servo_control_table']['ADDR_SCS_GOAL_SPEED']
             self.ADDR_SCS_PRESENT_POSITION = servo_config['servo_control_table']['ADDR_SCS_PRESENT_POSITION']
 
+            self.ADDR_TORQUE_LIMIT = servo_config['servo_control_table']['ADDR_TORQUE_LIMIT']
+            self.ADDR_CURRENT_TORQUE_VAL = servo_config['servo_control_table']['ADDR_CURRENT_TORQUE_VAL']
     def setAcc(self,servo_id = 1):
         # Write SCServo acc
         scs_comm_result, scs_error = self.packetHandler.write1ByteTxRx(\
@@ -108,6 +109,17 @@ class servo_controller:
                 print("%s" % self.packetHandler.getTxRxResult(scs_comm_result))
             elif scs_error != 0:
                 print("%s" % self.packetHandler.getRxPacketError(scs_error))
+
+    def getPresentTorque(self,servo_id = 1):
+        # Write SCServo goal position
+        torque_val,result, scs_error = \
+            self.packetHandler.read2ByteTxRx\
+            (self.portHandler, servo_id, self.ADDR_CURRENT_TORQUE_VAL)
+        if result != COMM_SUCCESS:
+            print("%s" % self.packetHandler.getTxRxResult(result))
+        elif scs_error != 0:
+            print("%s" % self.packetHandler.getRxPacketError(scs_error))
+        print("Present torque: "+str(torque_val))
 
     def getPoseSpeed(self,servo_id = 1):
         
