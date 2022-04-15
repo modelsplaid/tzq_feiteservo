@@ -26,7 +26,7 @@ if __name__ == '__main__':
         user_msg = input("Input servo speed position id: ")
         servo_speed = int(user_msg[0])*200            
         servo_pose = int(user_msg[1])*1000
-        servo_id = int(user_msg[2])*1000            
+        servo_id = int(user_msg[2])
         if user_msg == chr(0x1b):
             break            
 
