@@ -1,6 +1,5 @@
 {
     "serial_params": {
-        "SCS_ID": 1,
         "BAUDRATE": 1000000,
         "DEVICENAME": "/dev/ttyUSB0"
     },
@@ -21,6 +20,8 @@
         "ADDR_SCS_GOAL_ACC": 41,
         "ADDR_SCS_GOAL_POSITION": 42,
         "ADDR_SCS_GOAL_SPEED": 46,
-        "ADDR_SCS_PRESENT_POSITION": 56
+        "ADDR_SCS_PRESENT_POSITION": 56,
+        "ADDR_TORQUE_LIMIT": 48,
+        "ADDR_CURRENT_TORQUE_VAL": 60
     }
 }

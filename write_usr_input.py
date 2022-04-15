@@ -40,6 +40,7 @@ if __name__ == '__main__':
         servoCtl.setSpeed(servo_speed,servo_id)
         servoCtl.getPoseSpeed(servo_id)
 
-        for i in range(50): 
+        for i in range(100): 
             time.sleep(0.1)
+            servoCtl.getPoseSpeed(servo_id)
             servoCtl.getPresentTorque(servo_id)
