@@ -17,7 +17,7 @@ def getch():
     return ch
 
 
-
+# todo: add port as argument, to make multiple servo works
 class servo_controller:
     
     def __init__(self):    
