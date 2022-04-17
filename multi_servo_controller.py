@@ -27,10 +27,10 @@ else:
 class MultiServoController:
     def __init__(self,\
                 servo_json_config_file = "servo_config.json",\
-                serial_send_freq=300,\
+                serial_max_recv_freq=50,\
                 servo_commu_template_file = "servo_commu.json"\
                 ):
-        self.serial_send_freq = serial_send_freq
+        self.serial_max_recv_freq = serial_max_recv_freq
         self.servo_commu_template_file = servo_commu_template_file
         self.servo_commu_template = None
         self.serial_recv_queue = queue.Queue()
@@ -102,9 +102,9 @@ class MultiServoController:
             self.serial_recv_queue.put(servo_in_out_info)
 
             #3. sleep a while
-            self.sleep_freq_hz(10)
+            self.sleep_freq_hz(self.serial_max_recv_freq)
 
-    def sleep_freq_hz(self,freq_hz=300):
+    def sleep_freq_hz(self,freq_hz=100):
         period_sec = 1.0/freq_hz
         time.sleep(period_sec)
 
