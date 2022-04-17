@@ -79,7 +79,7 @@ class MultiServoController:
             #2. get servo infos
             for i in servo_in_out_info:
                 servo_in_out_info[i]['recv_servo_valid'] = True
-                print("Get servo index: "+ i)
+                #print("Get servo index: "+ i)
                 servo_id = servo_in_out_info[i]["device_id"]
                 # get current pose speed
                 (pose,speed) = self.servos_ctl.getPoseSpeed(servo_id)
@@ -92,11 +92,11 @@ class MultiServoController:
                 servo_in_out_info[i]["time_stamp"] = time.monotonic()
                 time_stamp = servo_in_out_info[i]["time_stamp"]
 
-                print("servo id: "+str(servo_id)+"pose: "+str(pose)+\
-                    "speed: "+str(speed)+\
-                    "recv_servo_torque_val:"+\
+                print("servo id: "+str(servo_id)+" pose: "+str(pose)+\
+                    " speed: "+str(speed)+\
+                    " recv_servo_torque_val:"+\
                     str(servo_in_out_info[i]["recv_servo_torque_val"])+\
-                    "time_stamp:"+str(time_stamp))
+                    " time_stamp:"+str(time_stamp))
             self.serial_recv_queue.put(servo_in_out_info)
 
             #3. sleep a while
@@ -139,3 +139,6 @@ def oldservo():
 
 if __name__ == '__main__':
     multi_servo_ctl = MultiServoController()
+    while True: 
+        time.sleep(1)
+        print("in main")
