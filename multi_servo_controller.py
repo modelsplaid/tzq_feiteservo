@@ -43,6 +43,8 @@ class MultiServoController:
         self.serial_commu_thread.daemon = True
         self.serial_commu_thread.start()    
 
+    def push_to_send_queue(self,servo_commu):
+        self.serial_send_queue.put(servo_commu)
 
     def load_servo_commu_template(self):
         print("loading servo communication template")
@@ -107,38 +109,34 @@ class MultiServoController:
         time.sleep(period_sec)
 
 
-def oldservo():
-    
-    servoCtl = hexa_servo_controller.servo_controller()
-    while (True):
-        user_msg = input("Input servo id position speed torque : ")
-        servo_id = int(user_msg[0])    
-        servo_pose = int(user_msg[1])*1000
-        servo_speed = int(user_msg[2])*200
-        servo_torque = int(user_msg[3])*100
-                
-        
-        if user_msg == chr(0x1b):
-            break            
-
-        print("User given servo_id: "+str(servo_id))
-        print("User given position: "+str(servo_pose))
-        print("User given speed: "+str(servo_speed))
-        print("User given servo_torque: "+str(servo_torque))
-
-        
-
-        servoCtl.setPosition(servo_pose,servo_id)
-        servoCtl.setSpeed(servo_speed,servo_id)
-        servoCtl.getPoseSpeed(servo_id)
-        servoCtl.setTorque(servo_torque,servo_id)
-        for i in range(100): 
-            time.sleep(0.1)
-            servoCtl.getPoseSpeed(servo_id)
-            servoCtl.getPresentTorque(servo_id)
+def test_makeup_send_servo_commu(multi_servo_ctl):
+    send_data = copy.deepcopy(multi_servo_ctl.servo_commu_template)
+    for i in send_data: 
+        send_data[i]['send_servo_valid'] = True
+        send_data[i]['send_servo_pos_val'] = 4000
+        send_data[i]['send_servo_speed_val'] = 500
+        send_data[i]['send_servo_torque_val'] = 2000
 
 if __name__ == '__main__':
     multi_servo_ctl = MultiServoController()
     while True: 
-        time.sleep(1)
+        send_data = copy.deepcopy(multi_servo_ctl.servo_commu_template)
+        for i in send_data: 
+            send_data[i]['send_servo_valid'] = True
+            send_data[i]['send_servo_pos_val'] = 2000
+            send_data[i]['send_servo_speed_val'] = 500
+            send_data[i]['send_servo_torque_val'] = 200
+        multi_servo_ctl.push_to_send_queue(send_data)        
+        time.sleep(10)
+
+
+        send_data = copy.deepcopy(multi_servo_ctl.servo_commu_template)
+        for i in send_data: 
+            send_data[i]['send_servo_valid'] = True
+            send_data[i]['send_servo_pos_val'] = 000
+            send_data[i]['send_servo_speed_val'] = 1000
+            send_data[i]['send_servo_torque_val'] = 500
+        multi_servo_ctl.push_to_send_queue(send_data)        
+        time.sleep(10)
+
         print("in main")
