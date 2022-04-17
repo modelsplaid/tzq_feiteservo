@@ -135,7 +135,7 @@ class servo_controller:
             print("%s" % self.packetHandler.getRxPacketError(scs_error))
         print("Present torque: %03d"%( torque_val))
 
-        return 
+        return torque_val
 
     def getPoseSpeed(self,servo_id = 1):
         
@@ -149,7 +149,10 @@ class servo_controller:
 
         scs_present_position = SCS_LOWORD(scs_present_position_speed)
         scs_present_speed = SCS_HIWORD(scs_present_position_speed)
-        print("[ID:%03d] PresPos:%03d PresSpd:%03d"% (servo_id, scs_present_position, SCS_TOHOST(scs_present_speed, 15)))
+        scs_present_speed = SCS_TOHOST(scs_present_speed, 15)
+        print("[ID:%03d] PresPos:%03d PresSpd:%03d"%\
+             (servo_id, scs_present_position,scs_present_speed))
+        return (scs_present_position,scs_present_speed)
 
     def deactivateTorque(self,servo_id = 1):
 

@@ -5,6 +5,7 @@ from scservo_sdk import hexa_servo_controller
 import time
 import threading
 import queue
+import copy
 
 if os.name == 'nt':
     import msvcrt
@@ -41,10 +42,8 @@ class MultiServoController:
         self.serial_commu_thread = threading.Thread(target=self.serial_servo_thread, args=(2,))
         self.serial_commu_thread.daemon = True
         self.serial_commu_thread.start()    
-        
 
 
-    
     def load_servo_commu_template(self):
         print("loading servo communication template")
         with open(self.servo_commu_template_file, "r") as fObj:
@@ -53,16 +52,55 @@ class MultiServoController:
         print("self.servo_commu_template: " + str(self.servo_commu_template))
 
     def serial_servo_thread(self,name):        
-        while(True):
 
-            if (self.serial_send_queue.empty()==False):
-                pass
-            #1. set servo params
+        while(True):            
+            servo_in_out_info = copy.deepcopy(self.servo_commu_template)
+            #1. send servo params
+            if (self.serial_send_queue.empty() == False):
+                one_send_data = self.serial_send_queue.get()
+                
+                for i in one_send_data:
+                    servo_id = one_send_data[i]["device_id"]
+                    # send out to each servo
+                    if(one_send_data[i]['send_servo_valid'] is True):
+                        send_servo_pos_val =    one_send_data[i]["send_servo_pos_val"]
+                        send_servo_speed_val =  one_send_data[i]["send_servo_speed_val"]
+                        send_servo_torque_val = one_send_data[i]["send_servo_torque_val"]
+
+                        servo_in_out_info[i]['send_servo_valid'] = True
+                        servo_in_out_info[i]["send_servo_pos_val"] = send_servo_pos_val
+                        servo_in_out_info[i]["send_servo_speed_val"] = send_servo_speed_val
+                        servo_in_out_info[i]["send_servo_torque_val"] = send_servo_torque_val
+
+                        self.servos_ctl.setTorque(send_servo_torque_val,servo_id)                
+                        self.servos_ctl.setSpeed(send_servo_speed_val,servo_id)
+                        self.servos_ctl.setPosition(send_servo_pos_val,servo_id)
 
             #2. get servo infos
+            for i in servo_in_out_info:
+                servo_in_out_info[i]['recv_servo_valid'] = True
+                print("Get servo index: "+ i)
+                servo_id = servo_in_out_info[i]["device_id"]
+                # get current pose speed
+                (pose,speed) = self.servos_ctl.getPoseSpeed(servo_id)
+                servo_in_out_info[i]["recv_servo_pos_val"] = pose
+                servo_in_out_info[i]["recv_servo_speed_val"] = speed
+                # get current torque
+                servo_in_out_info[i]["recv_servo_torque_val"] = \
+                    self.servos_ctl.getPresentTorque(servo_id)
+                # get time
+                servo_in_out_info[i]["time_stamp"] = time.monotonic()
+                time_stamp = servo_in_out_info[i]["time_stamp"]
+
+                print("servo id: "+str(servo_id)+"pose: "+str(pose)+\
+                    "speed: "+str(speed)+\
+                    "recv_servo_torque_val:"+\
+                    str(servo_in_out_info[i]["recv_servo_torque_val"])+\
+                    "time_stamp:"+str(time_stamp))
+            self.serial_recv_queue.put(servo_in_out_info)
 
             #3. sleep a while
-            self.sleep_freq_hz()
+            self.sleep_freq_hz(10)
 
     def sleep_freq_hz(self,freq_hz=300):
         period_sec = 1.0/freq_hz

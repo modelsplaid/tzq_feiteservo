@@ -12,6 +12,7 @@
         "SCS_MAXIMUM_POSITION_VALUE": 3000,
         "SCS_MOVING_STATUS_THRESHOLD": 20,
         "SCS_MOVING_SPEED": 500,
+        "SCS_MOVING_TORQUE": 500,
         "SCS_MOVING_ACC": 0,
         "protocol_end": 0
     },
