@@ -108,15 +108,6 @@ class MultiServoController:
         period_sec = 1.0/freq_hz
         time.sleep(period_sec)
 
-
-def test_makeup_send_servo_commu(multi_servo_ctl):
-    send_data = copy.deepcopy(multi_servo_ctl.servo_commu_template)
-    for i in send_data: 
-        send_data[i]['send_servo_valid'] = True
-        send_data[i]['send_servo_pos_val'] = 4000
-        send_data[i]['send_servo_speed_val'] = 500
-        send_data[i]['send_servo_torque_val'] = 2000
-
 if __name__ == '__main__':
     multi_servo_ctl = MultiServoController()
     while True: 
