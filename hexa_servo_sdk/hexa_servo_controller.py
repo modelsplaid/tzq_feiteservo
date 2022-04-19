@@ -63,10 +63,6 @@ class ServoController:
             self.BAUDRATE = servo_config['serial_params']['BAUDRATE']
             self.DEVICENAME = servo_config['serial_params']['DEVICENAME']
 
-            #2. parse net params 
-            self.IP = servo_config['net_params']['IP']
-            self.PORT = servo_config['net_params']['PORT']
-            
             #3. parse servo params 
             self.SCS_MINIMUM_POSITION_VALUE = servo_config['servo_params']['SCS_MINIMUM_POSITION_VALUE']
             self.SCS_MAXIMUM_POSITION_VALUE = servo_config['servo_params']['SCS_MAXIMUM_POSITION_VALUE']

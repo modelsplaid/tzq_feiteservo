@@ -3,10 +3,6 @@
         "BAUDRATE": 1000000,
         "DEVICENAME": "/dev/ttyUSB0"
     },
-    "net_params": {
-        "IP": "",
-        "PORT": 20000
-    },
     "servo_params": {
         "SCS_MINIMUM_POSITION_VALUE": 2000,
         "SCS_MAXIMUM_POSITION_VALUE": 3000,
