@@ -6,11 +6,6 @@ dic_serial_params = dict(\
                     DEVICENAME = '/dev/ttyUSB0'
                     )
 
-dic_net_params = dict(\
-                IP = "",
-                PORT = 20000
-                )
-
 dic_servo_params = dict(\
                 # SCServo will rotate between this value
                 SCS_MINIMUM_POSITION_VALUE  = 2000,\
@@ -35,8 +30,7 @@ dic_servo_control_table = dict(\
     )
 
 servo_config =dict(\
-                serial_params=dic_serial_params,\
-                net_params=dic_net_params,\
+                serial_params=dic_serial_params,\                
                 servo_params=dic_servo_params,\
                 servo_control_table=dic_servo_control_table           
                 )
