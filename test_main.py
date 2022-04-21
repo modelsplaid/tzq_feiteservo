@@ -28,4 +28,6 @@ if __name__ == '__main__':
         multi_servo_ctl.push_to_send_queue(send_data)        
         time.sleep(5)
 
+        one_frame_recv_servo = multi_servo_ctl.pop_recv_queue()
+        print("one_frame_recv_servo: "+str(one_frame_recv_servo))
         print("in main")

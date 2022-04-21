@@ -186,6 +186,12 @@ class MultiServoController:
         self.serial_commu_thread.daemon = True
         self.serial_commu_thread.start()    
 
+    def pop_recv_queue(self):
+        if(self.serial_recv_queue.empty()==False):
+            return False
+        else:    
+            return self.serial_recv_queue.get()
+
     def push_to_send_queue(self,servo_commu):
         self.serial_send_queue.put(servo_commu)
 
@@ -237,11 +243,11 @@ class MultiServoController:
                 servo_in_out_info[i]["time_stamp"] = time.monotonic()
                 time_stamp = servo_in_out_info[i]["time_stamp"]
 
-                print("servo id: "+str(servo_id)+" pose: "+str(pose)+\
-                    " speed: "+str(speed)+\
-                    " recv_servo_torque_val:"+\
-                    str(servo_in_out_info[i]["recv_servo_torque_val"])+\
-                    " time_stamp:"+str(time_stamp))
+                #print("servo id: "+str(servo_id)+" pose: "+str(pose)+\
+                #    " speed: "+str(speed)+\
+                #    " recv_servo_torque_val:"+\
+                #    str(servo_in_out_info[i]["recv_servo_torque_val"])+\
+                #    " time_stamp:"+str(time_stamp))
             self.serial_recv_queue.put(servo_in_out_info)
 
             #3. sleep a while
