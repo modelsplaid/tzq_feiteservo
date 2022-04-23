@@ -194,6 +194,7 @@ class protocol_packet_handler(object):
         else:
             port.setPacketTimeout(6)  # HEADER0 HEADER1 ID LENGTH ERROR CHECKSUM
 
+
         # rx packet
         while True:
             rxpacket, result = self.rxPacket(port)

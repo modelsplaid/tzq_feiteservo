@@ -207,6 +207,7 @@ class MultiServoController:
         while(True):            
             servo_in_out_info = copy.deepcopy(self.servo_commu_template)
             #1. send servo params
+            '''
             if (self.serial_send_queue.empty() == False):
                 one_send_data = self.serial_send_queue.get()
                 
@@ -226,7 +227,7 @@ class MultiServoController:
                         self.servos_ctl.setTorque(send_servo_torque_val,servo_id)                
                         self.servos_ctl.setSpeed(send_servo_speed_val,servo_id)
                         self.servos_ctl.setPosition(send_servo_pos_val,servo_id)
-
+            '''
             #2. get servo infos
             for i in servo_in_out_info:
                 servo_in_out_info[i]['recv_servo_valid'] = True
@@ -236,9 +237,14 @@ class MultiServoController:
                 (pose,speed) = self.servos_ctl.getPoseSpeed(servo_id)
                 servo_in_out_info[i]["recv_servo_pos_val"] = pose
                 servo_in_out_info[i]["recv_servo_speed_val"] = speed
+                #self.sleep_freq_hz(self.serial_max_recv_freq)
+
                 # get current torque
-                servo_in_out_info[i]["recv_servo_torque_val"] = \
-                    self.servos_ctl.getPresentTorque(servo_id)
+                #servo_in_out_info[i]["recv_servo_torque_val"] = \
+                #    self.servos_ctl.getPresentTorque(servo_id)
+                
+                #self.sleep_freq_hz(self.serial_max_recv_freq)
+                
                 # get time
                 servo_in_out_info[i]["time_stamp"] = time.monotonic()
                 time_stamp = servo_in_out_info[i]["time_stamp"]
