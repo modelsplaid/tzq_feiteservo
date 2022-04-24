@@ -3,7 +3,8 @@ import sys, tty, termios
 import os
 import json
 from .port_handler import * 
-from .packet_handler import *
+from .scscl import *
+from .protocol_packet_handler import *
 import time
 import threading
 import queue
@@ -32,9 +33,6 @@ class ServoController:
         # Get methods and members of PortHandlerLinux or PortHandlerWindows
         self.portHandler = PortHandler(self.DEVICENAME)
 
-        # Initialize PacketHandler instance
-        # Get methods and members of Protocol
-        self.packetHandler = PacketHandler(self.protocol_end)
 
         # Open port
         if self.portHandler.openPort():
@@ -53,6 +51,11 @@ class ServoController:
             print("Press any key to terminate...")
             getch()
             quit()
+        
+        # Initialize PacketHandler instance
+        # Get methods and members of Protocol
+        self.packetHandler = scscl(self.portHandler)
+
     def parseServoConfig(self,file_name = "servo_config.json" ):
         with open(file_name, "r") as fObj:
             servo_config = json.load(fObj)
@@ -89,7 +92,7 @@ class ServoController:
             print("%s" % self.packetHandler.getTxRxResult(scs_comm_result))
         elif scs_error != 0:
             print("%s" % self.packetHandler.getRxPacketError(scs_error))
-
+        pass
     
     def setAcc(self,servo_id = 1):
         # Write SCServo acc
@@ -123,36 +126,39 @@ class ServoController:
 
     def getPresentTorque(self,servo_id = 1):
         # Write SCServo goal position
-        torque_val,result, scs_error = \
-            self.packetHandler.read2ByteTxRx\
-            (self.portHandler, servo_id, self.ADDR_CURRENT_TORQUE_VAL)
-
-        torque_val = SCS_TOHOST(torque_val, 10)
-
-        if result != COMM_SUCCESS:
-            print("%s" % self.packetHandler.getTxRxResult(result))
-        elif scs_error != 0:
-            print("%s" % self.packetHandler.getRxPacketError(scs_error))
+        #torque_val,result, scs_error = \
+        #    self.packetHandler.read2ByteTxRx\
+        #    (self.portHandler, servo_id, self.ADDR_CURRENT_TORQUE_VAL)
+        #torque_val = SCS_TOHOST(torque_val, 10)
+        #if result != COMM_SUCCESS:
+        #    print("%s" % self.packetHandler.getTxRxResult(result))
+        #elif scs_error != 0:
+        #    print("%s" % self.packetHandler.getRxPacketError(scs_error))
         #print("Present torque: %03d"%( torque_val))
-
+        torque_val = 0
         return torque_val
 
     def getPoseSpeed(self,servo_id = 1):
-        
-        scs_present_position_speed, scs_comm_result, scs_error =\
-            self.packetHandler.read4ByteTxRx(\
-            self.portHandler, servo_id, self.ADDR_SCS_PRESENT_POSITION)
-        if scs_comm_result != COMM_SUCCESS:
-            print(self.packetHandler.getTxRxResult(scs_comm_result))
-        elif scs_error != 0:
-            print(self.packetHandler.getRxPacketError(scs_error))
 
-        scs_present_position = SCS_LOWORD(scs_present_position_speed)
-        scs_present_speed = SCS_HIWORD(scs_present_position_speed)
-        scs_present_speed = SCS_TOHOST(scs_present_speed, 15)
-        #print("[ID:%03d] PresPos:%03d PresSpd:%03d"%\
-        #     (servo_id, scs_present_position,scs_present_speed))
-        return (scs_present_position,scs_present_speed)
+        # Read SCServo present position
+        scs_comm_result_explain = ''
+        scs_servo_stat_err_explain = ''
+        scs_present_position, scs_present_speed, scs_comm_result, scs_error =\
+            self.packetHandler.ReadPosSpeed(servo_id)
+
+        if scs_comm_result != COMM_SUCCESS:
+            scs_comm_result_explain = self.packetHandler.getTxRxResult(scs_comm_result)
+            print(self.packetHandler.getTxRxResult(scs_comm_result))
+        else:
+            #print("[ID:%03d] PresPos:%d PresSpd:%d" % (servo_id, scs_present_position, scs_present_speed))
+            pass
+        if scs_error != 0:
+            scs_servo_stat_err_explain = self.packetHandler.getRxPacketError(scs_error)
+            print(scs_servo_stat_err_explain)
+        
+
+        return (scs_present_position,scs_present_speed,scs_comm_result,\
+                scs_comm_result_explain,scs_servo_stat_err_explain)
 
     def deactivateTorque(self,servo_id = 1):
 
@@ -207,38 +213,40 @@ class MultiServoController:
         while(True):            
             servo_in_out_info = copy.deepcopy(self.servo_commu_template)
             #1. send servo params
-            '''
+            
             if (self.serial_send_queue.empty() == False):
                 one_send_data = self.serial_send_queue.get()
                 
-                for i in one_send_data:
-                    servo_id = one_send_data[i]["device_id"]
-                    # send out to each servo
-                    if(one_send_data[i]['send_servo_valid'] is True):
-                        send_servo_pos_val =    one_send_data[i]["send_servo_pos_val"]
-                        send_servo_speed_val =  one_send_data[i]["send_servo_speed_val"]
-                        send_servo_torque_val = one_send_data[i]["send_servo_torque_val"]
+                # for i in one_send_data:
+                #     servo_id = one_send_data[i]["device_id"]
+                #     # send out to each servo
+                #     if(one_send_data[i]['send_servo_valid'] is True):
+                #         send_servo_pos_val =    one_send_data[i]["send_servo_pos_val"]
+                #         send_servo_speed_val =  one_send_data[i]["send_servo_speed_val"]
+                #         send_servo_torque_val = one_send_data[i]["send_servo_torque_val"]
 
-                        servo_in_out_info[i]['send_servo_valid'] = True
-                        servo_in_out_info[i]["send_servo_pos_val"] = send_servo_pos_val
-                        servo_in_out_info[i]["send_servo_speed_val"] = send_servo_speed_val
-                        servo_in_out_info[i]["send_servo_torque_val"] = send_servo_torque_val
+                #         servo_in_out_info[i]['send_servo_valid'] = True
+                #         servo_in_out_info[i]["send_servo_pos_val"] = send_servo_pos_val
+                #         servo_in_out_info[i]["send_servo_speed_val"] = send_servo_speed_val
+                #         servo_in_out_info[i]["send_servo_torque_val"] = send_servo_torque_val
 
-                        self.servos_ctl.setTorque(send_servo_torque_val,servo_id)                
-                        self.servos_ctl.setSpeed(send_servo_speed_val,servo_id)
-                        self.servos_ctl.setPosition(send_servo_pos_val,servo_id)
-            '''
+                #         self.servos_ctl.setTorque(send_servo_torque_val,servo_id)                
+                #         self.servos_ctl.setSpeed(send_servo_speed_val,servo_id)
+                #         self.servos_ctl.setPosition(send_servo_pos_val,servo_id)
+            
             #2. get servo infos
             for i in servo_in_out_info:
                 servo_in_out_info[i]['recv_servo_valid'] = True
                 #print("Get servo index: "+ i)
                 servo_id = servo_in_out_info[i]["device_id"]
                 # get current pose speed
-                (pose,speed) = self.servos_ctl.getPoseSpeed(servo_id)
+                (pose,speed,comm_result,comm_result_explain,servo_err) =\
+                        self.servos_ctl.getPoseSpeed(servo_id)
                 servo_in_out_info[i]["recv_servo_pos_val"] = pose
                 servo_in_out_info[i]["recv_servo_speed_val"] = speed
-                #self.sleep_freq_hz(self.serial_max_recv_freq)
-
+                servo_in_out_info[i]["recv_servo_commu_result"] = comm_result_explain
+                servo_in_out_info[i]["recv_servo_status_error"] = servo_err
+                
                 # get current torque
                 #servo_in_out_info[i]["recv_servo_torque_val"] = \
                 #    self.servos_ctl.getPresentTorque(servo_id)

@@ -11,7 +11,7 @@
         "recv_servo_pos_val": 99999,
         "recv_servo_torque_val": 99999,
         "recv_servo_speed_val": 99999,
-        "recv_servo_commu_error": "",
+        "recv_servo_commu_result": "",
         "recv_servo_status_error": "",
         "time_stamp": 0
     },
@@ -47,6 +47,4 @@
         "recv_servo_status_error": "",
         "time_stamp": 0
     }
-
-
 }
