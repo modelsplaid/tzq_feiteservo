@@ -13,7 +13,7 @@
         no unit yet
 
 "send_servo_commu_error":
-        possible error: 
+        possible error for send pose_speed: 
         if result == COMM_SUCCESS:
             return "[TxRxResult] Communication success!"
         elif result == COMM_PORT_BUSY:
@@ -36,6 +36,7 @@
             return ""
 
 "send_servo_status_error":
+        possible error for send pose_speed:
         if error & ERRBIT_VOLTAGE:
             return "[ServoStatus] Input voltage error!"
 
