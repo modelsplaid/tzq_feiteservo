@@ -12,7 +12,7 @@
 "send_servo_torque_val": 
         no unit yet
 
-"send_servo_commu_error":
+"send_servo_commu_result":
         possible error for send pose_speed: 
         if result == COMM_SUCCESS:
             return "[TxRxResult] Communication success!"
