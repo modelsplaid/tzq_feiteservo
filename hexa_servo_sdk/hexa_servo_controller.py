@@ -252,9 +252,9 @@ class MultiServoController:
                         servo_in_out_info[i]['send_servo_commu_result'] = scs_comm_result_explain
                         servo_in_out_info[i]["send_servo_status_error"] = scs_servo_stat_err_explain
 
-                        self.servos_ctl.setTorque(send_servo_torque_val,servo_id)                
-                        self.servos_ctl.setSpeed(send_servo_speed_val,servo_id)
-                        self.servos_ctl.setPosition(send_servo_pos_val,servo_id)
+                        #self.servos_ctl.setTorque(send_servo_torque_val,servo_id)                
+                        #self.servos_ctl.setSpeed(send_servo_speed_val,servo_id)
+                        #self.servos_ctl.setPosition(send_servo_pos_val,servo_id)
             
             #2. get servo infos
             for i in servo_in_out_info:
