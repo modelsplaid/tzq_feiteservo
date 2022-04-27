@@ -279,11 +279,11 @@ class MultiServoController:
                 servo_in_out_info[i]["time_stamp"] = time.monotonic()
                 time_stamp = servo_in_out_info[i]["time_stamp"]
 
-                print("servo id: "+str(servo_id)+" pose: "+str(pose)+\
-                    " speed: "+str(speed)+\
-                    " recv_servo_torque_val:"+\
-                    str(servo_in_out_info[i]["recv_servo_torque_val"])+\
-                    " time_stamp:"+str(time_stamp))
+                #print("servo id: "+str(servo_id)+" pose: "+str(pose)+\
+                #    " speed: "+str(speed)+\
+                #    " recv_servo_torque_val:"+\
+                #    str(servo_in_out_info[i]["recv_servo_torque_val"])+\
+                #    " time_stamp:"+str(time_stamp))
             self.serial_recv_queue.put(servo_in_out_info)
 
             #3. sleep a while
