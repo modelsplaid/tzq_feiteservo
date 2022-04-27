@@ -1,6 +1,6 @@
 {
     "serial_params": {
-        "BAUDRATE": 1000000,
+        "BAUDRATE": 38400,
         "DEVICENAME": "/dev/ttyUSB0"
     },
     "servo_params": {
