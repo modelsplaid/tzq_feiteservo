@@ -27,7 +27,7 @@ class ServoController:
     def __init__(self,servo_config_file = "servo_config.json"):    
         self.parseServoConfig(servo_config_file)
         self.openPort()
-        self.SCS_MOVING_ACC              = 50          # SCServo moving acc
+        self.SCS_MOVING_ACC              = 250          # SCServo moving acc
     def openPort(self):        
         # Initialize PortHandler instance
         # Set the port path
