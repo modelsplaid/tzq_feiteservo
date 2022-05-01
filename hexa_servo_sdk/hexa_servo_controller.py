@@ -3,7 +3,7 @@ import sys, tty, termios
 import os
 import json
 from .port_handler import * 
-from .scscl import *
+from .sms_sts import *
 from .protocol_packet_handler import *
 import time
 import threading
@@ -27,12 +27,15 @@ class ServoController:
     def __init__(self,servo_config_file = "servo_config.json"):    
         self.parseServoConfig(servo_config_file)
         self.openPort()
+        self.SCS_MOVING_ACC              = 50          # SCServo moving acc
     def openPort(self):        
         # Initialize PortHandler instance
         # Set the port path
         # Get methods and members of PortHandlerLinux or PortHandlerWindows
         self.portHandler = PortHandler(self.DEVICENAME)
-
+        # Initialize PacketHandler instance
+        # Get methods and members of Protocol
+        self.packetHandler = sms_sts(self.portHandler)
 
         # Open port
         if self.portHandler.openPort():
@@ -52,9 +55,7 @@ class ServoController:
             getch()
             quit()
         
-        # Initialize PacketHandler instance
-        # Get methods and members of Protocol
-        self.packetHandler = scscl(self.portHandler)
+
 
     def parseServoConfig(self,file_name = "servo_config.json" ):
         with open(file_name, "r") as fObj:
@@ -85,7 +86,8 @@ class ServoController:
             self.ADDR_CURRENT_TORQUE_VAL = servo_config['servo_control_table']['ADDR_CURRENT_TORQUE_VAL']
     
     def writePoseSpeed(self,position_val=0,speed_val=0,servo_id = 1):
-        scs_comm_result, scs_error = self.packetHandler.WritePos(servo_id, position_val, 0, speed_val)
+        print("write_pose: psoe: "+str(position_val)+ " speed val: "+str(speed_val)+"servo id: "+str(servo_id) )
+        scs_comm_result, scs_error = self.packetHandler.WritePosEx(servo_id, position_val, speed_val,self.SCS_MOVING_ACC)
         scs_comm_result_explain = ''
         scs_servo_stat_err_explain = ''
 
@@ -279,13 +281,13 @@ class MultiServoController:
                 servo_in_out_info[i]["time_stamp"] = time.monotonic()
                 time_stamp = servo_in_out_info[i]["time_stamp"]
 
-                #print("servo id: "+str(servo_id)+" pose: "+str(pose)+\
-                #    " speed: "+str(speed)+\
-                #    " recv_servo_torque_val:"+\
-                #    str(servo_in_out_info[i]["recv_servo_torque_val"])+\
-                #    " time_stamp:"+str(time_stamp))
+                print("servo id: "+str(servo_id)+" pose: "+str(pose)+\
+                    " speed: "+str(speed)+\
+                    " recv_servo_torque_val:"+\
+                    str(servo_in_out_info[i]["recv_servo_torque_val"])+\
+                    " time_stamp:"+str(time_stamp))
             self.serial_recv_queue.put(servo_in_out_info)
-
+            
             #3. sleep a while
             self.sleep_freq_hz(self.serial_max_recv_freq)
 
