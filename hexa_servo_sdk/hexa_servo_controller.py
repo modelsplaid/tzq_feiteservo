@@ -143,16 +143,15 @@ class ServoController:
 
     def getPresentTorque(self,servo_id = 1):
         # Write SCServo goal position
-        #torque_val,result, scs_error = \
-        #    self.packetHandler.read2ByteTxRx\
-        #    (self.portHandler, servo_id, self.ADDR_CURRENT_TORQUE_VAL)
-        #torque_val = SCS_TOHOST(torque_val, 10)
-        #if result != COMM_SUCCESS:
-        #    print("%s" % self.packetHandler.getTxRxResult(result))
-        #elif scs_error != 0:
-        #    print("%s" % self.packetHandler.getRxPacketError(scs_error))
-        #print("Present torque: %03d"%( torque_val))
-        torque_val = 0
+        torque_val,result, scs_error = \
+            self.packetHandler.read2ByteTxRx\
+            (servo_id, self.ADDR_CURRENT_TORQUE_VAL)
+        torque_val = self.packetHandler.scs_tohost(torque_val, 10)
+        if result != COMM_SUCCESS:
+            print("%s" % self.packetHandler.getTxRxResult(result))
+        elif scs_error != 0:
+            print("%s" % self.packetHandler.getRxPacketError(scs_error))
+        print("Present torque: %03d"%( torque_val))
         return torque_val
 
     def getPoseSpeed(self,servo_id = 1):
@@ -233,9 +232,11 @@ class MultiServoController:
             
             if (self.serial_send_queue.empty() == False):
                 one_send_data = self.serial_send_queue.get()
+                print("---Setting servo status ")
                 
                 for i in one_send_data:
                     servo_id = one_send_data[i]["device_id"]
+                    print("Set servo index: "+ i)
                     # send out to each servo
                     if(one_send_data[i]['send_servo_valid'] is True):
                         send_servo_pos_val =    one_send_data[i]["send_servo_pos_val"]
@@ -257,11 +258,11 @@ class MultiServoController:
                         #self.servos_ctl.setTorque(send_servo_torque_val,servo_id)                
                         #self.servos_ctl.setSpeed(send_servo_speed_val,servo_id)
                         #self.servos_ctl.setPosition(send_servo_pos_val,servo_id)
-            
+            print("+++Getting servo status ")
             #2. get servo infos
             for i in servo_in_out_info:
                 servo_in_out_info[i]['recv_servo_valid'] = True
-                #print("Get servo index: "+ i)
+                print("Get servo index: "+ i)
                 servo_id = servo_in_out_info[i]["device_id"]
                 # get current pose speed
                 (pose,speed,comm_result,comm_result_explain,servo_err) =\
@@ -289,7 +290,8 @@ class MultiServoController:
             self.serial_recv_queue.put(servo_in_out_info)
             
             #3. sleep a while
-            self.sleep_freq_hz(self.serial_max_recv_freq)
+            #self.sleep_freq_hz(self.serial_max_recv_freq)
+            self.sleep_freq_hz(1)
 
     def sleep_freq_hz(self,freq_hz=100):
         period_sec = 1.0/freq_hz
