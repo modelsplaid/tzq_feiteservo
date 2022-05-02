@@ -255,7 +255,7 @@ class MultiServoController:
                         servo_in_out_info[i]['send_servo_commu_result'] = scs_comm_result_explain
                         servo_in_out_info[i]["send_servo_status_error"] = scs_servo_stat_err_explain
 
-                        #self.servos_ctl.setTorque(send_servo_torque_val,servo_id)                
+                        self.servos_ctl.setTorque(send_servo_torque_val,servo_id)                
                         #self.servos_ctl.setSpeed(send_servo_speed_val,servo_id)
                         #self.servos_ctl.setPosition(send_servo_pos_val,servo_id)
             print("+++Getting servo status ")
@@ -265,16 +265,17 @@ class MultiServoController:
                 print("Get servo index: "+ i)
                 servo_id = servo_in_out_info[i]["device_id"]
                 # get current pose speed
-                (pose,speed,comm_result,comm_result_explain,servo_err) =\
-                        self.servos_ctl.getPoseSpeed(servo_id)
-                servo_in_out_info[i]["recv_servo_pos_val"] = pose
-                servo_in_out_info[i]["recv_servo_speed_val"] = speed
-                servo_in_out_info[i]["recv_servo_commu_result"] = comm_result_explain
-                servo_in_out_info[i]["recv_servo_status_error"] = servo_err
+                #(pose,speed,comm_result,comm_result_explain,servo_err) =\
+                #        self.servos_ctl.getPoseSpeed(servo_id)
+                #servo_in_out_info[i]["recv_servo_pos_val"] = pose
+                #servo_in_out_info[i]["recv_servo_speed_val"] = speed
+                #servo_in_out_info[i]["recv_servo_commu_result"] = comm_result_explain
+                #servo_in_out_info[i]["recv_servo_status_error"] = servo_err
                 
                 # get current torque
-                servo_in_out_info[i]["recv_servo_torque_val"] = \
-                    self.servos_ctl.getPresentTorque(servo_id)
+                torque_val = self.servos_ctl.getPresentTorque(servo_id)
+                servo_in_out_info[i]["recv_servo_torque_val"] = torque_val
+                print("torque_val: "+str(torque_val) )
                 
                 #self.sleep_freq_hz(self.serial_max_recv_freq)
                 
@@ -282,11 +283,12 @@ class MultiServoController:
                 servo_in_out_info[i]["time_stamp"] = time.monotonic()
                 time_stamp = servo_in_out_info[i]["time_stamp"]
 
-                print("servo id: "+str(servo_id)+" pose: "+str(pose)+\
-                    " speed: "+str(speed)+\
-                    " recv_servo_torque_val:"+\
-                    str(servo_in_out_info[i]["recv_servo_torque_val"])+\
-                    " time_stamp:"+str(time_stamp))
+                #print("servo id: "+str(servo_id)+" pose: "+str(pose)+\
+                #    " speed: "+str(speed)+\
+                #    " recv_servo_torque_val:"+\
+                #    str(servo_in_out_info[i]["recv_servo_torque_val"])+\
+                #    " time_stamp:"+str(time_stamp))
+                break
             self.serial_recv_queue.put(servo_in_out_info)
             
             #3. sleep a while
@@ -296,3 +298,5 @@ class MultiServoController:
     def sleep_freq_hz(self,freq_hz=100):
         period_sec = 1.0/freq_hz
         time.sleep(period_sec)
+
+
