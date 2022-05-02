@@ -37,7 +37,11 @@ if __name__ == '__main__':
             send_data[i]['send_servo_torque_val'] = 500
         multi_servo_ctl.push_to_send_queue(send_data)        
         time.sleep(3)
+<<<<<<< HEAD
         '''
+=======
+	#todo: test mac
+>>>>>>> ee88e3d07a7b2d91d32d7cfd880e5a530cae8e82
         #one_frame_recv_servo = multi_servo_ctl.pop_recv_queue()
         #print("one_frame_recv_servo: "+str(one_frame_recv_servo))
         print("in main")
