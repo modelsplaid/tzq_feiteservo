@@ -1,7 +1,7 @@
 {
     "serial_params": {
         "BAUDRATE": 38400,
-        "DEVICENAME": "/dev/ttyUSB0"
+        "DEVICENAME": "/dev/ttyS0"
     },
     "servo_params": {
         "SCS_MINIMUM_POSITION_VALUE": 2000,
