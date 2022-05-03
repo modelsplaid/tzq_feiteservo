@@ -32,6 +32,7 @@ class ServoController:
         # Initialize PortHandler instance
         # Set the port path
         # Get methods and members of PortHandlerLinux or PortHandlerWindows
+        print("Initializing serial port...")
         self.portHandler = PortHandler(self.DEVICENAME)
         # Initialize PacketHandler instance
         # Get methods and members of Protocol
@@ -55,6 +56,8 @@ class ServoController:
             getch()
             quit()
         
+
+        print("Done")
 
 
     def parseServoConfig(self,file_name = "servo_config.json" ):
@@ -232,11 +235,11 @@ class MultiServoController:
             
             if (self.serial_send_queue.empty() == False):
                 one_send_data = self.serial_send_queue.get()
-                print("---Setting servo status ")
+                #print("---Setting servo status ")
                 
                 for i in one_send_data:
                     servo_id = one_send_data[i]["device_id"]
-                    print("Set servo index: "+ i)
+                    #print("Set servo index: "+ i)
                     # send out to each servo
                     if(one_send_data[i]['send_servo_valid'] is True):
                         send_servo_pos_val =    one_send_data[i]["send_servo_pos_val"]
@@ -255,22 +258,20 @@ class MultiServoController:
                         servo_in_out_info[i]['send_servo_commu_result'] = scs_comm_result_explain
                         servo_in_out_info[i]["send_servo_status_error"] = scs_servo_stat_err_explain
 
-                        self.servos_ctl.setTorque(send_servo_torque_val,servo_id)                
-                        #self.servos_ctl.setSpeed(send_servo_speed_val,servo_id)
-                        #self.servos_ctl.setPosition(send_servo_pos_val,servo_id)
-            print("+++Getting servo status ")
+            #print("+++Getting servo status ")
             #2. get servo infos
             for i in servo_in_out_info:
+                break
                 servo_in_out_info[i]['recv_servo_valid'] = True
                 print("Get servo index: "+ i)
                 servo_id = servo_in_out_info[i]["device_id"]
                 # get current pose speed
-                #(pose,speed,comm_result,comm_result_explain,servo_err) =\
-                #        self.servos_ctl.getPoseSpeed(servo_id)
-                #servo_in_out_info[i]["recv_servo_pos_val"] = pose
-                #servo_in_out_info[i]["recv_servo_speed_val"] = speed
-                #servo_in_out_info[i]["recv_servo_commu_result"] = comm_result_explain
-                #servo_in_out_info[i]["recv_servo_status_error"] = servo_err
+                (pose,speed,comm_result,comm_result_explain,servo_err) =\
+                        self.servos_ctl.getPoseSpeed(servo_id)
+                servo_in_out_info[i]["recv_servo_pos_val"] = pose
+                servo_in_out_info[i]["recv_servo_speed_val"] = speed
+                servo_in_out_info[i]["recv_servo_commu_result"] = comm_result_explain
+                servo_in_out_info[i]["recv_servo_status_error"] = servo_err
                 
                 # get current torque
                 torque_val = self.servos_ctl.getPresentTorque(servo_id)
@@ -283,17 +284,16 @@ class MultiServoController:
                 servo_in_out_info[i]["time_stamp"] = time.monotonic()
                 time_stamp = servo_in_out_info[i]["time_stamp"]
 
-                #print("servo id: "+str(servo_id)+" pose: "+str(pose)+\
-                #    " speed: "+str(speed)+\
-                #    " recv_servo_torque_val:"+\
-                #    str(servo_in_out_info[i]["recv_servo_torque_val"])+\
-                #    " time_stamp:"+str(time_stamp))
-                break
+                print("servo id: "+str(servo_id)+" pose: "+str(pose)+\
+                    " speed: "+str(speed)+\
+                    " recv_servo_torque_val:"+\
+                    str(servo_in_out_info[i]["recv_servo_torque_val"])+\
+                    " time_stamp:"+str(time_stamp))
             self.serial_recv_queue.put(servo_in_out_info)
             
             #3. sleep a while
-            #self.sleep_freq_hz(self.serial_max_recv_freq)
-            self.sleep_freq_hz(1)
+            self.sleep_freq_hz(self.serial_max_recv_freq)
+            #self.sleep_freq_hz(1)
 
     def sleep_freq_hz(self,freq_hz=100):
         period_sec = 1.0/freq_hz
