@@ -251,7 +251,7 @@ class MultiServoController:
                         servo_in_out_info[i]["send_servo_speed_val"] = send_servo_speed_val
                         servo_in_out_info[i]["send_servo_torque_val"] = send_servo_torque_val
 
-                        self.servos_ctl.setTorque(send_servo_torque_val,servo_id)
+                        #self.servos_ctl.setTorque(send_servo_torque_val,servo_id)
                         (scs_comm_result_explain,scs_servo_stat_err_explain) = \
                             self.servos_ctl.writePoseSpeed(send_servo_pos_val,\
                             send_servo_speed_val,servo_id)
@@ -261,7 +261,7 @@ class MultiServoController:
             #print("+++Getting servo status ")
             #2. get servo infos
             for i in servo_in_out_info:
-                break
+                
                 servo_in_out_info[i]['recv_servo_valid'] = True
                 print("Get servo index: "+ i)
                 servo_id = servo_in_out_info[i]["device_id"]
@@ -276,7 +276,7 @@ class MultiServoController:
                 # get current torque
                 torque_val = self.servos_ctl.getPresentTorque(servo_id)
                 servo_in_out_info[i]["recv_servo_torque_val"] = torque_val
-                print("torque_val: "+str(torque_val) )
+                #print("torque_val: "+str(torque_val) )
                 
                 #self.sleep_freq_hz(self.serial_max_recv_freq)
                 
@@ -284,11 +284,11 @@ class MultiServoController:
                 servo_in_out_info[i]["time_stamp"] = time.monotonic()
                 time_stamp = servo_in_out_info[i]["time_stamp"]
 
-                print("servo id: "+str(servo_id)+" pose: "+str(pose)+\
-                    " speed: "+str(speed)+\
-                    " recv_servo_torque_val:"+\
-                    str(servo_in_out_info[i]["recv_servo_torque_val"])+\
-                    " time_stamp:"+str(time_stamp))
+                #print("servo id: "+str(servo_id)+" pose: "+str(pose)+\
+                #    " speed: "+str(speed)+\
+                #    " recv_servo_torque_val:"+\
+                #    str(servo_in_out_info[i]["recv_servo_torque_val"])+\
+                #    " time_stamp:"+str(time_stamp))
             self.serial_recv_queue.put(servo_in_out_info)
             
             #3. sleep a while
