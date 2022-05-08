@@ -260,7 +260,7 @@ class MultiServoController:
                         time.sleep(0.001)
             #print("+++Getting servo status ")
             #2. get servo infos
-            '''
+            
             for i in servo_in_out_info:
                 
                 servo_in_out_info[i]['recv_servo_valid'] = True
@@ -293,7 +293,7 @@ class MultiServoController:
                 #    " time_stamp:"+str(time_stamp))
 
             self.serial_recv_queue.put(servo_in_out_info)
-            '''
+            
             #3. sleep a while
             self.sleep_freq_hz(self.serial_max_recv_freq)
             #self.sleep_freq_hz(1)
