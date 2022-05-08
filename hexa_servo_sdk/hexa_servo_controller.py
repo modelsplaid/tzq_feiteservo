@@ -89,7 +89,7 @@ class ServoController:
             self.ADDR_CURRENT_TORQUE_VAL = servo_config['servo_control_table']['ADDR_CURRENT_TORQUE_VAL']
     
     def writePoseSpeed(self,position_val=0,speed_val=0,servo_id = 1):
-        print("write_pose: psoe: "+str(position_val)+ " speed val: "+str(speed_val)+"servo id: "+str(servo_id) )
+        print("servo id: "+str(servo_id)+"write_pose: psoe: "+str(position_val)+ " speed val: "+str(speed_val)+"acc: " +str(self.SCS_MOVING_ACC))
         scs_comm_result, scs_error = self.packetHandler.WritePosEx(servo_id, position_val, speed_val,self.SCS_MOVING_ACC)
         scs_comm_result_explain = ''
         scs_servo_stat_err_explain = ''
@@ -154,7 +154,7 @@ class ServoController:
             print("%s" % self.packetHandler.getTxRxResult(result))
         elif scs_error != 0:
             print("%s" % self.packetHandler.getRxPacketError(scs_error))
-        print("Present torque: %03d"%( torque_val))
+        #print("Present torque: %03d"%( torque_val))
         return torque_val
 
     def getPoseSpeed(self,servo_id = 1):
@@ -257,13 +257,14 @@ class MultiServoController:
                             send_servo_speed_val,servo_id)
                         servo_in_out_info[i]['send_servo_commu_result'] = scs_comm_result_explain
                         servo_in_out_info[i]["send_servo_status_error"] = scs_servo_stat_err_explain
-
+                        time.sleep(0.001)
             #print("+++Getting servo status ")
             #2. get servo infos
+            '''
             for i in servo_in_out_info:
                 
                 servo_in_out_info[i]['recv_servo_valid'] = True
-                print("Get servo index: "+ i)
+                #print("Get servo index: "+ i)
                 servo_id = servo_in_out_info[i]["device_id"]
                 # get current pose speed
                 (pose,speed,comm_result,comm_result_explain,servo_err) =\
@@ -284,13 +285,15 @@ class MultiServoController:
                 servo_in_out_info[i]["time_stamp"] = time.monotonic()
                 time_stamp = servo_in_out_info[i]["time_stamp"]
 
+                time.sleep(0.001)
                 #print("servo id: "+str(servo_id)+" pose: "+str(pose)+\
                 #    " speed: "+str(speed)+\
                 #    " recv_servo_torque_val:"+\
                 #    str(servo_in_out_info[i]["recv_servo_torque_val"])+\
                 #    " time_stamp:"+str(time_stamp))
+
             self.serial_recv_queue.put(servo_in_out_info)
-            
+            '''
             #3. sleep a while
             self.sleep_freq_hz(self.serial_max_recv_freq)
             #self.sleep_freq_hz(1)
