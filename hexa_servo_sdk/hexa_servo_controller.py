@@ -63,8 +63,8 @@ class ServoController:
     def parseServoConfig(self,file_name = "servo_config.json" ):
         with open(file_name, "r") as fObj:
             servo_config = json.load(fObj)
-            #print("servo_config:")
-            #print(servo_config)
+            print("servo_config params:")
+            print(servo_config)
 
             #1. parse serial params
             self.BAUDRATE = servo_config['serial_params']['BAUDRATE']
@@ -195,10 +195,13 @@ class ServoController:
 class MultiServoController:
     def __init__(self,\
                 servo_json_config_file = "servo_config.json",\
-                serial_max_recv_freq=50,\
                 servo_commu_template_file = "servo_commu.json"\
                 ):
-        self.serial_max_recv_freq = serial_max_recv_freq
+        # parse config params
+        with open(servo_json_config_file, "r") as fObj:
+            servo_config = json.load(fObj)
+            self.serial_max_recv_freq = servo_config['serial_params']["SERIAL_MAX_RECV_FREQ"]
+
         self.servo_commu_template_file = servo_commu_template_file
         self.servo_commu_template = None
         self.serial_recv_queue = queue.Queue()
