@@ -228,7 +228,7 @@ class MultiServoController:
         with open(self.servo_commu_template_file, "r") as fObj:
             self.servo_commu_template = json.load(fObj)
 
-        print("self.servo_commu_template: " + str(self.servo_commu_template))
+        #print("self.servo_commu_template: " + str(self.servo_commu_template))
 
     def serial_servo_thread(self,name):        
 
