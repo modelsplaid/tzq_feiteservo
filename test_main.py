@@ -7,7 +7,8 @@ import queue
 import copy
 
 if __name__ == '__main__':
-    multi_servo_ctl = hexa_servo_controller.MultiServoController()
+    multi_servo_ctl = hexa_servo_controller.\
+        MultiServoController("servo_config.json","servo_commu.json")
     while True:
         
         send_data = copy.deepcopy(multi_servo_ctl.servo_commu_template)

@@ -1,7 +1,8 @@
 {
     "serial_params": {
         "BAUDRATE": 1000000,
-        "DEVICENAME": "/dev/ttyAMA1"
+        "DEVICENAME": "/dev/ttyAMA1",
+        "SERIAL_MAX_RECV_FREQ": 50
     },
     "servo_params": {
         "SCS_MINIMUM_POSITION_VALUE": 2000,
