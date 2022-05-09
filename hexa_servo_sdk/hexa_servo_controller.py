@@ -251,7 +251,7 @@ class MultiServoController:
                         servo_in_out_info[i]["send_servo_speed_val"] = send_servo_speed_val
                         servo_in_out_info[i]["send_servo_torque_val"] = send_servo_torque_val
 
-                        #self.servos_ctl.setTorque(send_servo_torque_val,servo_id)
+                        self.servos_ctl.setTorque(send_servo_torque_val,servo_id)
                         (scs_comm_result_explain,scs_servo_stat_err_explain) = \
                             self.servos_ctl.writePoseSpeed(send_servo_pos_val,\
                             send_servo_speed_val,servo_id)
