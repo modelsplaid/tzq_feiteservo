@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 from .scservo_def import *
-
+import time
 TXPACKET_MAX_LEN = 250
 RXPACKET_MAX_LEN = 250
 
@@ -217,6 +217,7 @@ class protocol_packet_handler(object):
                     else:
                         result = COMM_RX_CORRUPT
                     break
+            time.sleep(0.001)
 
         self.portHandler.is_using = False
         return rxpacket, result
@@ -246,6 +247,7 @@ class protocol_packet_handler(object):
             rxpacket, result = self.rxPacket()
             if result != COMM_SUCCESS or txpacket[PKT_ID] == rxpacket[PKT_ID]:
                 break
+            time.sleep(0.001)
 
         if result == COMM_SUCCESS and txpacket[PKT_ID] == rxpacket[PKT_ID]:
             error = rxpacket[PKT_ERROR]
