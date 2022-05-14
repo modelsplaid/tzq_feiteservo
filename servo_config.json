@@ -10,7 +10,7 @@
         "SCS_MOVING_STATUS_THRESHOLD": 20,
         "SCS_MOVING_SPEED": 500,
         "SCS_MOVING_TORQUE": 500,
-        "SCS_MOVING_ACC": 500,
+        "SCS_MOVING_ACC": 255,
         "protocol_end": 0
     },
     "servo_control_table": {
