@@ -94,19 +94,28 @@ if __name__ == '__main__':
     print("Done init")
     time.sleep(1)
     print("start")
-    while True:
-        # Update pose and speed
-        for i in range(len(pose_arr)-1):
-            #compute_speed(initpose)
-            runtime = run_time_arr[i]
-            pose_val = pose_arr[i+1]
-            print("pose_val:"+str(pose_val))
-            (pose_servo,speed_servo) = compute_speed(pose_arr[i],pose_val,runtime)
-            for i in send_data: 
-                send_data[i]['send_servo_valid'] = True
-                send_data[i]['send_servo_pos_val'] = pose_servo
-                send_data[i]['send_servo_speed_val'] = speed_servo
-                send_data[i]['send_servo_torque_val'] = 500
-            multi_servo_ctl.push_to_send_queue(send_data)  
-            time.sleep(runtime)
-        exit()
+    # Update pose and speed
+    for i in range(len(pose_arr)-1):
+        #compute_speed(initpose)
+        runtime = run_time_arr[i]
+        pose_val = pose_arr[i+1]
+        print("pose_val:"+str(pose_val))
+        (pose_servo,speed_servo) = compute_speed(pose_arr[i],pose_val,runtime)
+        for i in send_data: 
+            send_data[i]['send_servo_valid'] = True
+            send_data[i]['send_servo_pos_val'] = pose_servo
+            send_data[i]['send_servo_speed_val'] = speed_servo
+            send_data[i]['send_servo_torque_val'] = 500
+        multi_servo_ctl.push_to_send_queue(send_data)  
+        time.sleep(runtime)
+        
+
+    time.sleep(3)
+    print("running to 2000")
+    for i in send_data: 
+        send_data[i]['send_servo_valid'] = True
+        send_data[i]['send_servo_pos_val'] = 2000
+        send_data[i]['send_servo_speed_val'] = 100
+        send_data[i]['send_servo_torque_val'] = 500
+    multi_servo_ctl.push_to_send_queue(send_data)  
+    time.sleep(3)
