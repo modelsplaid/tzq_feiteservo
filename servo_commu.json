@@ -322,18 +322,5 @@
         "recv_servo_torque_val": 99999,
         "recv_servo_torque_stats": "",
         "time_stamp": 0
-    },
-    "valve_pump_0": { // todo: here
-        "valve_pump_id": 18,
-        "send_servo_valid": false,
-        "send_servo_pos_val": 99999,
-        "send_servo_speed_val": 99999,
-        "send_servo_torque_val": 99999,
-        "recv_servo_valid": false,
-        "recv_servo_pos_val": 99999,
-        "recv_servo_torque_val": 99999,
-        "recv_servo_speed_val": 99999,
-        "time_stamp": 0
     }
-
 }
