@@ -73,8 +73,8 @@ def compute_speed(pose_old,pose_new,run_time):
 
 
 if __name__ == '__main__':
-    initpose = 1000
-    pose_arr = [initpose,2000,4000]
+    initpose = 2000
+    pose_arr = [initpose,2000,1500]
     run_time_arr = [2,4]
 
     multi_servo_ctl = hexa_servo_controller.\
@@ -84,7 +84,7 @@ if __name__ == '__main__':
     for i in send_data: 
         send_data[i]['send_servo_valid'] = True
         send_data[i]['send_servo_pos_val'] = initpose
-        send_data[i]['send_servo_speed_val'] = 1500
+        send_data[i]['send_servo_speed_val'] = 500
         send_data[i]['send_servo_torque_val'] = 500
     multi_servo_ctl.push_to_send_queue(send_data)  
     # Init servo pose  
@@ -110,12 +110,12 @@ if __name__ == '__main__':
         time.sleep(runtime)
         
 
-    time.sleep(3)
-    print("running to 2000")
-    for i in send_data: 
-        send_data[i]['send_servo_valid'] = True
-        send_data[i]['send_servo_pos_val'] = 2000
-        send_data[i]['send_servo_speed_val'] = 100
-        send_data[i]['send_servo_torque_val'] = 500
-    multi_servo_ctl.push_to_send_queue(send_data)  
-    time.sleep(3)
+    # time.sleep(3)
+    # print("running to 2000")
+    # for i in send_data: 
+    #     send_data[i]['send_servo_valid'] = True
+    #     send_data[i]['send_servo_pos_val'] = 2000
+    #     send_data[i]['send_servo_speed_val'] = 100
+    #     send_data[i]['send_servo_torque_val'] = 500
+    # multi_servo_ctl.push_to_send_queue(send_data)  
+    # time.sleep(3)

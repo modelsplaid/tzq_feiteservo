@@ -1,0 +1,10 @@
+{
+    "valve_pinout": {
+        "right-middle": 18,
+        "right-front": 16,
+        "left-front": 19,
+        "left-middle": 12,
+        "left-back": 6,
+        "right-back": 17
+    }
+}

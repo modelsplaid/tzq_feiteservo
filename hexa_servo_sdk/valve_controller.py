@@ -22,7 +22,17 @@ class ValveController:
             self.valve_pin_obj[pin] = ValveIO
 
     # Turn on valve and pump based on index. 
+    # index order is in counter-clockwise, start from right-middle end at right-back
     # index: 0: right-middle, 1: right-front, 2: left-front, ... 5: right-back 
+
+    # state = 0 : turn off valve and pump
+    # state = 1 : turn on valve and pump
+    # leg_name = :  "right-middle"
+    #               "right-front"
+    #               "left-front"
+    #               "left-middle"
+    #               "left-back"
+    #               "right-back"
 
     def setValveOnOffIndex(self,state = 0,index = 0):
         key_lists = list(self.valve_pin_obj.keys())
@@ -36,13 +46,28 @@ class ValveController:
             self.valve_pin_obj[sel_key].off()
             print("Turn off: " +str(sel_key)  )
             return True         
-
         return False
 
+    # state = 0 : turn off valve and pump
+    # state = 1 : turn on valve and pump
+    # leg_name = :  "right-middle"
+    #               "right-front"
+    #               "left-front"
+    #               "left-middle"
+    #               "left-back"
+    #               "right-back"
+    def setValveOnOffName(self,state = 0,leg_name = 0):
 
+        if(state == 1):
+            self.valve_pin_obj[leg_name].on()
+            print("Turn on: " +str(leg_name)  )
+            return True
+        if(state == 0):
+            self.valve_pin_obj[leg_name].off()
+            print("Turn off: " +str(leg_name))
+            return True         
+        return False        
 
-           
-            
     def parseValveConfig(self,valve_config_file = "../io_config.json"):
         with open(valve_config_file, "r") as fObj:
             valve_config = json.load(fObj)
@@ -62,15 +87,24 @@ class ValveController:
 if __name__ == '__main__':
     valve_ctl = ValveController()
 
-    for j in range(10):
+    valve_ctl.setValveOnOffName(state = 1, leg_name="right-middle")
+    time.sleep(0.5)
+    valve_ctl.setValveOnOffName(state = 0, leg_name="right-middle")
+    time.sleep(0.5)
+    valve_ctl.setValveOnOffName(state = 1, leg_name="right-middle")
+    time.sleep(0.5)
+    valve_ctl.setValveOnOffName(state = 0, leg_name="right-middle")
+    time.sleep(0.5)
+
+    for j in range(2):
         for i in range(6):
             valve_ctl.setValveOnOffIndex(state = 1, index = i)
-            time.sleep(1)
+            time.sleep(0.1)
 
         time.sleep(1)
         for i in range(6):
             valve_ctl.setValveOnOffIndex(state = 0, index = i)
-            time.sleep(1)
+            time.sleep(0.1)
 
 
 
