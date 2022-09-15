@@ -2,6 +2,7 @@
     "serial_servos": {
         "serial_servo_1": {
             "device_id": 1,
+            "servo_name": "left-back-coxia",
             "send_servo_valid": false,
             "send_servo_pos_val": 99999,
             "send_servo_pos_stats": "",
@@ -20,6 +21,7 @@
         },
         "serial_servo_2": {
             "device_id": 2,
+            "servo_name": "left-back-femur",
             "send_servo_valid": false,
             "send_servo_pos_val": 99999,
             "send_servo_pos_stats": "",
@@ -38,6 +40,7 @@
         },
         "serial_servo_3": {
             "device_id": 3,
+            "servo_name": "left-back-tibia",
             "send_servo_valid": false,
             "send_servo_pos_val": 99999,
             "send_servo_pos_stats": "",
@@ -56,6 +59,7 @@
         },
         "serial_servo_4": {
             "device_id": 4,
+            "servo_name": "left-middle-coxia",
             "send_servo_valid": false,
             "send_servo_pos_val": 99999,
             "send_servo_pos_stats": "",
@@ -74,6 +78,7 @@
         },
         "serial_servo_5": {
             "device_id": 5,
+            "servo_name": "left-middle-femur",
             "send_servo_valid": false,
             "send_servo_pos_val": 99999,
             "send_servo_pos_stats": "",
@@ -92,6 +97,7 @@
         },
         "serial_servo_6": {
             "device_id": 6,
+            "servo_name": "left-middle-tibia",
             "send_servo_valid": false,
             "send_servo_pos_val": 99999,
             "send_servo_pos_stats": "",
@@ -110,6 +116,7 @@
         },
         "serial_servo_7": {
             "device_id": 7,
+            "servo_name": "left-front-coxia",
             "send_servo_valid": false,
             "send_servo_pos_val": 99999,
             "send_servo_pos_stats": "",
@@ -128,6 +135,7 @@
         },
         "serial_servo_8": {
             "device_id": 8,
+            "servo_name": "left-front-femur",
             "send_servo_valid": false,
             "send_servo_pos_val": 99999,
             "send_servo_pos_stats": "",
@@ -146,6 +154,7 @@
         },
         "serial_servo_9": {
             "device_id": 9,
+            "servo_name": "left-front-tibia",
             "send_servo_valid": false,
             "send_servo_pos_val": 99999,
             "send_servo_pos_stats": "",
@@ -164,6 +173,7 @@
         },
         "serial_servo_10": {
             "device_id": 10,
+            "servo_name": "right-back-coxia",
             "send_servo_valid": false,
             "send_servo_pos_val": 99999,
             "send_servo_pos_stats": "",
@@ -182,6 +192,7 @@
         },
         "serial_servo_11": {
             "device_id": 11,
+            "servo_name": "right-back-femur",
             "send_servo_valid": false,
             "send_servo_pos_val": 99999,
             "send_servo_pos_stats": "",
@@ -200,6 +211,7 @@
         },
         "serial_servo_12": {
             "device_id": 12,
+            "servo_name": "right-back-tibia",
             "send_servo_valid": false,
             "send_servo_pos_val": 99999,
             "send_servo_pos_stats": "",
@@ -218,6 +230,7 @@
         },
         "serial_servo_13": {
             "device_id": 13,
+            "servo_name": "right-middle-coxia",
             "send_servo_valid": false,
             "send_servo_pos_val": 99999,
             "send_servo_pos_stats": "",
@@ -236,6 +249,7 @@
         },
         "serial_servo_14": {
             "device_id": 14,
+            "servo_name": "right-middle-femur",
             "send_servo_valid": false,
             "send_servo_pos_val": 99999,
             "send_servo_pos_stats": "",
@@ -254,6 +268,7 @@
         },
         "serial_servo_15": {
             "device_id": 15,
+            "servo_name": "right-middle-tibia",
             "send_servo_valid": false,
             "send_servo_pos_val": 99999,
             "send_servo_pos_stats": "",
@@ -272,6 +287,7 @@
         },
         "serial_servo_16": {
             "device_id": 16,
+            "servo_name": "right-front-coxia",
             "send_servo_valid": false,
             "send_servo_pos_val": 99999,
             "send_servo_pos_stats": "",
@@ -290,6 +306,7 @@
         },
         "serial_servo_17": {
             "device_id": 17,
+            "servo_name": "right-front-femur",
             "send_servo_valid": false,
             "send_servo_pos_val": 99999,
             "send_servo_pos_stats": "",
@@ -308,6 +325,7 @@
         },
         "serial_servo_18": {
             "device_id": 18,
+            "servo_name": "right-front-tibia",
             "send_servo_valid": false,
             "send_servo_pos_val": 99999,
             "send_servo_pos_stats": "",
