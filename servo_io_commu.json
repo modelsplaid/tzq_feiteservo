@@ -344,45 +344,45 @@
         }
     },
     "valve_pumps":{
-        "valve_pump_0": {
+        "right_middle": {
             "valve_pump_id": 0, 
             "valve_pump_name": "right_middle_valpump",
-            "pump_status": 1,
+            "recv_pump_status": 1,
             "turn_onoff_val_pump": 2,
             "time_stamp": 0
         },
-        "valve_pump_1": {
+        "right_front": {
             "valve_pump_id": 1, 
             "valve_pump_name": "right_front_valpump",
-            "pump_status": 1,
+            "recv_pump_status": 1,
             "turn_onoff_val_pump": 2,
             "time_stamp": 0
         },
-        "valve_pump_2": {
+        "left_front": {
             "valve_pump_id": 2, 
             "valve_pump_name": "left_front_valpump",
-            "pump_status": 1,
+            "recv_pump_status": 1,
             "turn_onoff_val_pump": 2,
             "time_stamp": 0
         },
-        "valve_pump_3": {
+        "left_middle": {
             "valve_pump_id": 3, 
             "valve_pump_name": "left_middle_valpump",
-            "pump_status": 1,
+            "recv_pump_status": 1,
             "turn_onoff_val_pump": 2,
             "time_stamp": 0
         },
-        "valve_pump_4": {
+        "left_back": {
             "valve_pump_id": 4, 
             "valve_pump_name": "left_back_valpump",
-            "pump_status": 1,
+            "recv_pump_status": 1,
             "turn_onoff_val_pump": 2,
             "time_stamp": 0
         },
-        "valve_pump_5": {
+        "right_back": {
             "valve_pump_id": 5, 
             "valve_pump_name": "right_back_valpump",
-            "pump_status": 1,
+            "recv_pump_status": 1,
             "turn_onoff_val_pump": 2,
             "time_stamp": 0
         }

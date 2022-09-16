@@ -6,5 +6,10 @@
         "left_middle": 12,
         "left_back": 6,
         "right_back": 17
+    },
+    "io_actions": {
+        "turn_off": 0,
+        "turn_on": 1,
+        "no_action": 2
     }
 }

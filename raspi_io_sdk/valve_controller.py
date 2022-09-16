@@ -6,8 +6,8 @@ from copy import deepcopy
 
 class ValveController:
     def __init__(self,valve_config_file = "../io_config.json"): 
-        self.valve_pinout = []
-        self.valve_pin_obj = []
+        self.valve_pinout_config = None
+        self.valve_pin_obj = None
         self.num_valves = 0
 
         valve_pinout = self.parseValveConfig(valve_config_file)
@@ -73,12 +73,15 @@ class ValveController:
             valve_config = json.load(fObj)
             print("valve_config:")
             print(valve_config)
-            self.valve_pinout = valve_config["valve_pinout"] 
-            print("valve_pinout: \n" +str (self.valve_pinout))
+            self.valve_pinout_config = valve_config["valve_pinout"] 
+            print("valve_pinout: \n" +str (self.valve_pinout_config))
 
         self.num_valves = len(valve_config["valve_pinout"])
         print("num valves: "+str(self.num_valves))
-        return self.valve_pinout
+        return self.valve_pinout_config
+
+    def getValvePinoutConfig(self):
+        return self.valve_pinout_config
 
     def getNumValves(self):
         return self.num_valves
