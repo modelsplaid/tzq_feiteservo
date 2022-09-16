@@ -1,10 +1,8 @@
 ## Description: 
 
-    This project is to communicate feite scs serial servos. 
+    This project is to communicate feite scs serial servos and turn on/off the pumps and valves . 
     It can set serovs' position,speed,and torque.  
-    It receive present position,speed,and torque value in a fixed frequency.
-    It also supports multiple servers, just add a new item in servo_commu.json.    
-
+    It receives present position,speed,and torque value in a fixed frequency.
 
 ## Program working flow: 
     It has two queues. One is for sending data, the other is for receiving.
@@ -18,10 +16,29 @@
     How to run:
         python3 test_main.py
 
-## How to decrease/increse servos: 
-    Edit servo_commu.json 
+## Pinout:
 
-## How to change rpi4 serial port: 
+### Serial port pinout:
+    This project is using ttyAMA1 as default serial port. 
+    The pins for rpi4's ttyAMA1 is:
+    ttyAMA1 Tx : GPIO 0
+    ttyAMA1 Rx : GPIO 1 
+    By default rpi4 doest not set GPIO 0 and 1 as serial port, to 
+    change it as serial port, look below "How to change rpi4 serial port"
+    Serial ports can be changed in servo_config.json
+
+### Valve & pump pinout:
+    Valve and pump are connected to the same pin on raspberry pi 4
+    "right-middle": GPIO 18
+    "right-front":  GPIO 16
+    "left-front":   GPIO 19
+    "left-middle":  GPIO 12
+    "left-back":    GPIO 6
+    "right-back":   GPIO 17
+
+    These pinouts can be changed in io_config.json
+
+### How to change rpi4 serial port: 
     There are four new overlays for hardware serial ports - uart2 to uart5. 
     After loading they will be available as /dev/ttyAMA1-4. 
     To activate one of the additional hardware serial ports, 
@@ -33,11 +50,12 @@
 
     To see the GPIO pin allocation for a uart via 
     the command-line use: dtoverlay -h uart2
+    (https://forums.raspberrypi.com/viewtopic.php?t=244528)
 
-## How to print out gpio layouts:
+
+### How to print out gpio layouts:
     raspi-gpio get 0-1
     pinout
-
 
 ## Inter porcess communication protocols
 
@@ -106,6 +124,7 @@
 ## References: 
     https://gitee.com/ftservo/SCServoSDK            
     https://forums.raspberrypi.com/viewtopic.php?t=244528
+    
  
  
  
