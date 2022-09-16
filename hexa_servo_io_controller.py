@@ -143,7 +143,7 @@ class MultiServoIOController:
 
                 if(OnOff == self.io_actions["turn_off"] or OnOff == self.io_actions["turn_on"] ):
                     self.valpump_pump_ctl.setValveOnOffName(OnOff,i)
-                elif(OnOff == self.io_actions["turn_off"]):
+                elif(OnOff == self.io_actions["no_action"]):
                     pass
                 else:
                     print("!!! invalid parameters for io actiosn")
