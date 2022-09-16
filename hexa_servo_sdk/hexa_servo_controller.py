@@ -56,7 +56,6 @@ class ServoController:
             getch()
             quit()
         
-
         print("Done")
 
 
