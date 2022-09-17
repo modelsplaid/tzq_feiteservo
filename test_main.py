@@ -79,7 +79,7 @@ if __name__ == '__main__':
     multi_servo_io_ctl = MultiServoIOController("servo_config.json","servo_io_commu.json","io_config.json")
     send_data = copy.deepcopy(multi_servo_io_ctl.servo_io_commu_template)
 
-    for j in range(100):
+    for j in range(1):
         # update valves 
         for i in send_data["valve_pumps"]:
             print("turn on valve pump: "+str(i) )
@@ -97,11 +97,11 @@ if __name__ == '__main__':
             time.sleep(0.1)   
 
 
-    time.sleep(10)
+    time.sleep(1)
 
 
 
-    '''
+    
     # update servos 
     for i in send_data["serial_servos"]: 
         send_data["serial_servos"][i]['send_servo_valid'] = True
@@ -129,7 +129,6 @@ if __name__ == '__main__':
             send_data["serial_servos"][i]['send_servo_speed_val'] = speed_servo
             send_data["serial_servos"][i]['send_servo_torque_val'] = 500
         multi_servo_io_ctl.push_to_send_queue(send_data)  
-        time.sleep(runtime)
-    '''
+        time.sleep(1)
         
 
