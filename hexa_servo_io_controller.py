@@ -2,11 +2,15 @@
 import sys, tty, termios
 import os
 import json
-from .hexa_servo_sdk.port_handler import * 
-from .hexa_servo_sdk.sms_sts import *
-from .hexa_servo_sdk.protocol_packet_handler import *
-from .hexa_servo_sdk.hexa_servo_controller import ServoController
-from .raspi_io_sdk.valve_controller import ValveController
+
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(os.path.dirname(SCRIPT_DIR))
+
+from hexa_servo_sdk.port_handler import * 
+from hexa_servo_sdk.sms_sts import *
+from hexa_servo_sdk.protocol_packet_handler import *
+from hexa_servo_sdk.hexa_servo_controller import ServoController
+from raspi_io_sdk.valve_controller import ValveController
 import time
 import threading
 import queue
@@ -23,11 +27,8 @@ class MultiServoIOController:
                 ):
         # parse config params for rpi4 io
         self.valpump_pump_ctl = ValveController(io_json_config_file)
-        self.valpump_pinout_dict = self.valpump_pump_ctl.getValvePinoutConfig()
-        self.io_actions = self.valpump_pinout_dict["io_actions"]
-
-
-
+        self.io_actions = self.valpump_pump_ctl.getValvePinoutConfigActions()
+        print("---self.io_actions: " +str(self.io_actions) )
         # parse config params for serial servos
         with open(servo_json_config_file, "r") as fObj:
             servo_config = json.load(fObj)
@@ -59,7 +60,7 @@ class MultiServoIOController:
         with open(self.io_servo_commu_template_file, "r") as fObj:
             self.servo_io_commu_template = json.load(fObj)
 
-        print("self.servo_io_commu_template: " + str(self.servo_io_commu_template))
+        #print("self.servo_io_commu_template: " + str(self.servo_io_commu_template))
 
     def serial_servo_thread(self,name):        
 
@@ -100,6 +101,24 @@ class MultiServoIOController:
 
                         time.sleep(0.001)
 
+                
+                #3. Set IO status  
+                for i in  one_send_data["valve_pumps"]:
+                    #"turn_onoff_val_pump" : 0: Turn off valve and pump,
+                    #                        1: Turn on valve and pump 
+                    #                        2: No action 
+                    OnOff =  one_send_data["valve_pumps"][i]["turn_onoff_val_pump"] 
+
+                    if(OnOff == self.io_actions["turn_off"] or OnOff == self.io_actions["turn_on"] ):
+                        print("setting io: name: "+str(i)+" onoff: "+str(OnOff)  )
+                        self.valpump_pump_ctl.setValveOnOffName(OnOff,i)
+                    elif(OnOff == self.io_actions["no_action"]):
+                        pass
+                    else:
+                        print("!!! invalid parameters for io actiosn")
+
+                # update recv queue        
+                servo_in_out_info["valve_pumps"] = one_send_data["valve_pumps"]
 
             #2. Get servo msgs
             for i in servo_in_out_info["serial_servos"]:
@@ -134,19 +153,7 @@ class MultiServoIOController:
                 #    " time_stamp:"+str(time_stamp))
 
 
-            #3. Set IO status  
-            for i in servo_in_out_info["valve_pumps"]:
-                #"turn_onoff_val_pump" : 0: Turn off valve and pump,
-                #                        1: Turn on valve and pump 
-                #                        2: No action 
-                OnOff = servo_in_out_info["valve_pumps"][i]["turn_onoff_val_pump"] 
 
-                if(OnOff == self.io_actions["turn_off"] or OnOff == self.io_actions["turn_on"] ):
-                    self.valpump_pump_ctl.setValveOnOffName(OnOff,i)
-                elif(OnOff == self.io_actions["no_action"]):
-                    pass
-                else:
-                    print("!!! invalid parameters for io actiosn")
                 
             #4. Put received serial data in recv queue 
             self.serial_recv_queue.put(servo_in_out_info)

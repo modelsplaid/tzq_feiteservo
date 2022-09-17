@@ -1,7 +1,7 @@
 import os
 import json
 from tkinter.tix import Tree
-from hexa_servo_sdk import hexa_servo_io_controller 
+from hexa_servo_io_controller  import MultiServoIOController
 import time
 import threading
 import queue
@@ -9,39 +9,38 @@ import copy
 import math
 
 def test_send_pose():
-    multi_servo_ctl = hexa_servo_io_controller.\
-        MultiServoIOController("servo_config.json","servo_io_commu.json","io_config.json")
+    multi_servo_io_ctl = MultiServoIOController("servo_config.json","servo_io_commu.json","io_config.json")
     while True:
         
-        send_data = copy.deepcopy(multi_servo_ctl.servo_io_commu_template)
+        send_data = copy.deepcopy(multi_servo_io_ctl.servo_io_commu_template)
         for i in send_data["serial_servos"]: 
             send_data["serial_servos"][i]['send_servo_valid'] = True
             send_data["serial_servos"][i]['send_servo_pos_val'] = 500
             send_data["serial_servos"][i]['send_servo_speed_val'] = 1000
             send_data["serial_servos"][i]['send_servo_torque_val'] = 500
-        multi_servo_ctl.push_to_send_queue(send_data)        
+        multi_servo_io_ctl.push_to_send_queue(send_data)        
         time.sleep(1)
 
 
-        send_data = copy.deepcopy(multi_servo_ctl.servo_io_commu_template)
+        send_data = copy.deepcopy(multi_servo_io_ctl.servo_io_commu_template)
         for i in send_data["serial_servos"]: 
             send_data["serial_servos"][i]['send_servo_valid'] = True
             send_data["serial_servos"][i]['send_servo_pos_val'] = 1000
             send_data["serial_servos"][i]['send_servo_speed_val'] = 1000
             send_data["serial_servos"][i]['send_servo_torque_val'] = 500
-        multi_servo_ctl.push_to_send_queue(send_data)        
+        multi_servo_io_ctl.push_to_send_queue(send_data)        
         time.sleep(1)
 
-        send_data = copy.deepcopy(multi_servo_ctl.servo_io_commu_template)
+        send_data = copy.deepcopy(multi_servo_io_ctl.servo_io_commu_template)
         for i in send_data["serial_servos"]: 
             send_data["serial_servos"][i]['send_servo_valid'] = True
             send_data["serial_servos"][i]['send_servo_pos_val'] = 2000
             send_data["serial_servos"][i]['send_servo_speed_val'] = 1000
             send_data["serial_servos"][i]['send_servo_torque_val'] = 500
-        multi_servo_ctl.push_to_send_queue(send_data)        
+        multi_servo_io_ctl.push_to_send_queue(send_data)        
         time.sleep(1)
         
-        #one_frame_recv_servo = multi_servo_ctl.pop_recv_queue()
+        #one_frame_recv_servo = multi_servo_io_ctl.pop_recv_queue()
         #print("one_frame_recv_servo: "+str(one_frame_recv_servo))
         print("in main")
 
@@ -77,16 +76,27 @@ if __name__ == '__main__':
     pose_arr = [initpose,2000,1500]
     run_time_arr = [2,4]
 
-    multi_servo_ctl = hexa_servo_controller.\
-    MultiServoController("servo_config.json","servo_commu.json")
-    send_data = copy.deepcopy(multi_servo_ctl.servo_io_commu_template)
+    multi_servo_io_ctl = MultiServoIOController("servo_config.json","servo_io_commu.json","io_config.json")
+    send_data = copy.deepcopy(multi_servo_io_ctl.servo_io_commu_template)
 
-    for i in send_data: 
-        send_data[i]['send_servo_valid'] = True
-        send_data[i]['send_servo_pos_val'] = initpose
-        send_data[i]['send_servo_speed_val'] = 500
-        send_data[i]['send_servo_torque_val'] = 500
-    multi_servo_ctl.push_to_send_queue(send_data)  
+    # update valves 
+    for i in send_data["valve_pumps"]:
+        print("turn on valve pump: "+str(i) )
+        send_data["valve_pumps"][i]["turn_onoff_val_pump"] = 1
+    
+    multi_servo_io_ctl.push_to_send_queue(send_data)  
+    time.sleep(3)
+
+
+
+    '''
+    # update servos 
+    for i in send_data["serial_servos"]: 
+        send_data["serial_servos"][i]['send_servo_valid'] = True
+        send_data["serial_servos"][i]['send_servo_pos_val'] = initpose
+        send_data["serial_servos"][i]['send_servo_speed_val'] = 500
+        send_data["serial_servos"][i]['send_servo_torque_val'] = 500
+    multi_servo_io_ctl.push_to_send_queue(send_data)  
     # Init servo pose  
     time.sleep(5)
     print("Done init")
@@ -102,20 +112,12 @@ if __name__ == '__main__':
         print("pose_val:"+str(pose_val))
         (pose_servo,speed_servo) = compute_speed(pose_arr[i],pose_val,runtime)
         for i in send_data: 
-            send_data[i]['send_servo_valid'] = True
-            send_data[i]['send_servo_pos_val'] = pose_servo
-            send_data[i]['send_servo_speed_val'] = speed_servo
-            send_data[i]['send_servo_torque_val'] = 500
-        multi_servo_ctl.push_to_send_queue(send_data)  
+            send_data["serial_servos"][i]['send_servo_valid'] = True
+            send_data["serial_servos"][i]['send_servo_pos_val'] = pose_servo
+            send_data["serial_servos"][i]['send_servo_speed_val'] = speed_servo
+            send_data["serial_servos"][i]['send_servo_torque_val'] = 500
+        multi_servo_io_ctl.push_to_send_queue(send_data)  
         time.sleep(runtime)
+    '''
         
 
-    # time.sleep(3)
-    # print("running to 2000")
-    # for i in send_data: 
-    #     send_data[i]['send_servo_valid'] = True
-    #     send_data[i]['send_servo_pos_val'] = 2000
-    #     send_data[i]['send_servo_speed_val'] = 100
-    #     send_data[i]['send_servo_torque_val'] = 500
-    # multi_servo_ctl.push_to_send_queue(send_data)  
-    # time.sleep(3)

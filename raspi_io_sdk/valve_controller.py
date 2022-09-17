@@ -7,6 +7,7 @@ from copy import deepcopy
 class ValveController:
     def __init__(self,valve_config_file = "../io_config.json"): 
         self.valve_pinout_config = None
+        self.valve_pin_actions = None
         self.valve_pin_obj = None
         self.num_valves = 0
 
@@ -74,14 +75,15 @@ class ValveController:
             print("valve_config:")
             print(valve_config)
             self.valve_pinout_config = valve_config["valve_pinout"] 
+            self.valve_pin_actions = valve_config["io_actions"] 
             print("valve_pinout: \n" +str (self.valve_pinout_config))
 
         self.num_valves = len(valve_config["valve_pinout"])
         print("num valves: "+str(self.num_valves))
         return self.valve_pinout_config
 
-    def getValvePinoutConfig(self):
-        return self.valve_pinout_config
+    def getValvePinoutConfigActions(self):
+        return self.valve_pin_actions
 
     def getNumValves(self):
         return self.num_valves
@@ -90,13 +92,13 @@ class ValveController:
 if __name__ == '__main__':
     valve_ctl = ValveController()
 
-    valve_ctl.setValveOnOffName(state = 1, leg_name="right-middle")
+    valve_ctl.setValveOnOffName(state = 1, leg_name="right_middle")
     time.sleep(0.5)
-    valve_ctl.setValveOnOffName(state = 0, leg_name="right-middle")
+    valve_ctl.setValveOnOffName(state = 0, leg_name="right_middle")
     time.sleep(0.5)
-    valve_ctl.setValveOnOffName(state = 1, leg_name="right-middle")
+    valve_ctl.setValveOnOffName(state = 1, leg_name="right_middle")
     time.sleep(0.5)
-    valve_ctl.setValveOnOffName(state = 0, leg_name="right-middle")
+    valve_ctl.setValveOnOffName(state = 0, leg_name="right_middle")
     time.sleep(0.5)
 
     for j in range(2):
