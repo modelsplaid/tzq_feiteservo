@@ -28,13 +28,24 @@
     Serial ports can be changed in servo_config.json
 
 ### Valve & pump pinout:
-    Valve and pump are connected to the same pin on raspberry pi 4
-    "right-middle": GPIO 18
-    "right-front":  GPIO 16
-    "left-front":   GPIO 19
-    "left-middle":  GPIO 12
-    "left-back":    GPIO 6
-    "right-back":   GPIO 17
+
+    There are 3 driver modules, each controls two pumps and valves. 
+    Each pair of pump and valve share the same output pin on driver modules. 
+
+    Driver modules' output 1,output 3 connect the ground of pump and valve pair 
+    Driver modules' output 2,output 4 connect the positive of pump and valve pair
+
+    Driver modules' input 1, input 3 does not connet to rpi, just leave it there. 
+    Driver modules' input 2, input 4 connect to rpi's IO pin.  
+
+    IO_19--->Driver module 1 ,input 1 --->output 1 ---> Left front pump and valve pair 
+    IO_16--->Driver module 1 ,input 3 --->output 3 ---> Right front pump and valve pair
+
+    IO_06--->Driver module 2 ,input 1 --->output 1 ---> Left back pump and valve pair 
+    IO_12--->Driver module 2 ,input 3 --->output 3 ---> Left middle pump and valve pair
+
+    IO_18--->Driver module 2 ,input 1 --->output 1 ---> Right middle pump and valve pair 
+    IO_17--->Driver module 2 ,input 3 --->output 3 ---> Right back pump and valve pair
 
     These pinouts can be changed in io_config.json
 

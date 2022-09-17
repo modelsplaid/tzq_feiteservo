@@ -4,7 +4,7 @@ import os
 import json
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-sys.path.append(os.path.dirname(SCRIPT_DIR))
+sys.path.append(SCRIPT_DIR)
 
 from hexa_servo_sdk.port_handler import * 
 from hexa_servo_sdk.sms_sts import *
