@@ -61,11 +61,11 @@ class ValveController:
 
         if(state == 1):
             self.valve_pin_obj[leg_name].on()
-            print("Turn on: " +str(leg_name)  )
+            print("Turn on valve pump: " +str(leg_name)  )
             return True
         if(state == 0):
             self.valve_pin_obj[leg_name].off()
-            print("Turn off: " +str(leg_name))
+            print("Turn off valve pump: " +str(leg_name))
             return True         
         return False        
 

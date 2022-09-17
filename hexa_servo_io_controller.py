@@ -110,7 +110,7 @@ class MultiServoIOController:
                     OnOff =  one_send_data["valve_pumps"][i]["turn_onoff_val_pump"] 
 
                     if(OnOff == self.io_actions["turn_off"] or OnOff == self.io_actions["turn_on"] ):
-                        print("setting io: name: "+str(i)+" onoff: "+str(OnOff)  )
+                        #print("setting io: name: "+str(i)+" onoff: "+str(OnOff)  )
                         self.valpump_pump_ctl.setValveOnOffName(OnOff,i)
                     elif(OnOff == self.io_actions["no_action"]):
                         pass
@@ -160,6 +160,8 @@ class MultiServoIOController:
             
             #5. sleep a while
             self.sleep_freq_hz(self.serial_max_recv_freq)
+
+            
 
     def sleep_freq_hz(self,freq_hz=100):
         period_sec = 1.0/freq_hz
