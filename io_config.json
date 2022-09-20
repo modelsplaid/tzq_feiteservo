@@ -1,11 +1,11 @@
 {
     "valve_pinout": {
-        "right_middle": 18,
-        "right_front": 16,
-        "left_front": 19,
-        "left_middle": 12,
-        "left_back": 6,
-        "right_back": 17
+        "right-middle": 18,
+        "right-front": 16,
+        "left-front": 19,
+        "left-middle": 12,
+        "left-back": 6,
+        "right-back": 17
     },
     "io_actions": {
         "turn_off": 0,

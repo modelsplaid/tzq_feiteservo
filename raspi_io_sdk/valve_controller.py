@@ -92,13 +92,13 @@ class ValveController:
 if __name__ == '__main__':
     valve_ctl = ValveController()
 
-    valve_ctl.setValveOnOffName(state = 1, leg_name="right_middle")
+    valve_ctl.setValveOnOffName(state = 1, leg_name="right-middle")
     time.sleep(0.5)
-    valve_ctl.setValveOnOffName(state = 0, leg_name="right_middle")
+    valve_ctl.setValveOnOffName(state = 0, leg_name="right-middle")
     time.sleep(0.5)
-    valve_ctl.setValveOnOffName(state = 1, leg_name="right_middle")
+    valve_ctl.setValveOnOffName(state = 1, leg_name="right-middle")
     time.sleep(0.5)
-    valve_ctl.setValveOnOffName(state = 0, leg_name="right_middle")
+    valve_ctl.setValveOnOffName(state = 0, leg_name="right-middle")
     time.sleep(0.5)
 
     for j in range(2):
