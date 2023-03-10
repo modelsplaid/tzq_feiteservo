@@ -1,25 +1,25 @@
 {
-    "serial_params": {
-        "BAUDRATE": 1000000,
-        "DEVICENAME": "/dev/ttyAMA1",
-        "SERIAL_MAX_RECV_FREQ": 50
+    "serial_params"     : {
+        "BAUDRATE"                   : 1000000       ,
+        "DEVICENAME"                 : "/dev/ttyAMA1",
+        "SERIAL_MAX_RECV_FREQ"       : 50
     },
-    "servo_params": {
-        "SCS_MINIMUM_POSITION_VALUE": 2000,
-        "SCS_MAXIMUM_POSITION_VALUE": 3000,
-        "SCS_MOVING_STATUS_THRESHOLD": 20,
-        "SCS_MOVING_SPEED": 500,
-        "SCS_MOVING_TORQUE": 500,
-        "SCS_MOVING_ACC": 255,
-        "protocol_end": 0
+
+    "net_params"         : {
+        "IP"                         : ""  ,"PORT"                      : 20000
     },
+
+    "servo_params"       : {
+        "SCS_MINIMUM_POSITION_VALUE" : 2000 ,"SCS_MAXIMUM_POSITION_VALUE": 3000,
+        "SCS_MOVING_STATUS_THRESHOLD": 20   ,"SCS_MOVING_SPEED"          : 500 ,
+        "SCS_MOVING_TORQUE"          : 500  ,"SCS_MOVING_ACC"            : 0   ,
+        "protocol_end"               : 0
+    },
+
     "servo_control_table": {
-        "ADDR_SCS_TORQUE_ENABLE": 40,
-        "ADDR_SCS_GOAL_ACC": 41,
-        "ADDR_SCS_GOAL_POSITION": 42,
-        "ADDR_SCS_GOAL_SPEED": 46,
-        "ADDR_SCS_PRESENT_POSITION": 56,
-        "ADDR_TORQUE_LIMIT": 48,
-        "ADDR_CURRENT_TORQUE_VAL": 60
-    }
+        "ADDR_SCS_TORQUE_ENABLE"     : 40   ,"ADDR_SCS_GOAL_ACC"         : 41  ,
+        "ADDR_SCS_GOAL_POSITION"     : 42   ,"ADDR_SCS_GOAL_SPEED"       : 46  ,
+        "ADDR_SCS_PRESENT_POSITION"  : 56   ,"ADDR_TORQUE_LIMIT"         : 48  ,
+        "ADDR_CURRENT_TORQUE_VAL"    : 60
+     }
 }

@@ -6,10 +6,11 @@ from copy import deepcopy
 
 class ValveController:
     def __init__(self,valve_config_file = "../io_config.json"): 
+        
         self.valve_pinout_config = None
-        self.valve_pin_actions = None
-        self.valve_pin_obj = None
-        self.num_valves = 0
+        self.valve_pin_actions   = None
+        self.valve_pin_obj       = None
+        self.num_valves          = 0
 
         valve_pinout = self.parseValveConfig(valve_config_file)
         self.initValvePins(valve_pinout)
@@ -57,6 +58,7 @@ class ValveController:
     #               "left-middle"
     #               "left-back"
     #               "right-back"
+
     def setValveOnOffName(self,state = 0,leg_name = 0):
 
         if(state == 1):
@@ -87,7 +89,6 @@ class ValveController:
 
     def getNumValves(self):
         return self.num_valves
-
 
 if __name__ == '__main__':
     valve_ctl = ValveController()
