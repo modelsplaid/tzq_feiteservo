@@ -16,6 +16,17 @@ class ValveController:
         self.initValvePins(valve_pinout)
     
     def initValvePins(self,pinout):
+        """
+        Turn on valve and pump based on index. 
+        index order is in counter-clockwise, start from right-middle end at right-back
+        index: 0: right-middle, 1: right-front, 2: left-front, ... 5: right-back 
+
+        state = 0  : turn off valve and pump
+        state = 1  : turn on valve and pump
+        leg_name = :  "right-middle","right-front","left-front"               
+                      "left-middle" ,"left-back"  , "right-back"
+        """
+
         self.valve_pin_obj = deepcopy(pinout)
 
         for pin in pinout:
@@ -23,20 +34,19 @@ class ValveController:
             ValveIO = LED(pinout[pin])
             self.valve_pin_obj[pin] = ValveIO
 
-    # Turn on valve and pump based on index. 
-    # index order is in counter-clockwise, start from right-middle end at right-back
-    # index: 0: right-middle, 1: right-front, 2: left-front, ... 5: right-back 
-
-    # state = 0 : turn off valve and pump
-    # state = 1 : turn on valve and pump
-    # leg_name = :  "right-middle"
-    #               "right-front"
-    #               "left-front"
-    #               "left-middle"
-    #               "left-back"
-    #               "right-back"
 
     def setValveOnOffIndex(self,state = 0,index = 0):
+        """
+        Turn on valve and pump based on index. 
+        index order is in counter-clockwise, start from right-middle end at right-back
+        index: 0: right-middle, 1: right-front, 2: left-front, ... 5: right-back 
+
+        state = 0  : turn off valve and pump
+        state = 1  : turn on valve and pump
+        leg_name = :  "right-middle","right-front","left-front"               
+                      "left-middle" ,"left-back"  , "right-back"
+        """
+        
         key_lists = list(self.valve_pin_obj.keys())
         #print("key_lists:"+str(key_lists))
         sel_key = key_lists[index]
@@ -50,14 +60,6 @@ class ValveController:
             return True         
         return False
 
-    # state = 0 : turn off valve and pump
-    # state = 1 : turn on valve and pump
-    # leg_name = :  "right-middle"
-    #               "right-front"
-    #               "left-front"
-    #               "left-middle"
-    #               "left-back"
-    #               "right-back"
 
     def setValveOnOffName(self,state = 0,leg_name = 0):
 

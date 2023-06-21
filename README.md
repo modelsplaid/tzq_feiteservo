@@ -73,61 +73,59 @@
 ### Servos
 
     "device_id": 1,
-    "send_servo_valid": 
-            false: means below send_* value is not valid
+    "send_servo_valid"       : false: means below send_* value is not valid
 
-    "send_servo_pos_val":
-            in steps 
+    "send_servo_pos_val"     : in steps 
+            
 
-    "send_servo_speed_val":
-            steps/sec 
+    "send_servo_speed_val"   : steps/sec
+             
 
-    "send_servo_torque_val": 
-            no unit yet
-
+    "send_servo_torque_val"  : no unit yet
+            
     "send_servo_commu_result":
-            possible error for send pose_speed: 
-                "[TxRxResult] Communication success!"
-                "[TxRxResult] Port is in use!"
-                "[TxRxResult] Failed transmit instruction packet!"
-                "[TxRxResult] Failed get status packet from device!"
-                "[TxRxResult] Incorrect instruction packet!"
-                "[TxRxResult] Now receiving status packet!"
-                "[TxRxResult] There is no status packet!"
-                "[TxRxResult] Incorrect status packet!"
-                "[TxRxResult] Protocol does not support this function!"
+                               possible error for send pose_speed: 
+                                        "[TxRxResult] Communication success!"
+                                        "[TxRxResult] Port is in use!"
+                                        "[TxRxResult] Failed transmit instruction packet!"
+                                        "[TxRxResult] Failed get status packet from device!"
+                                        "[TxRxResult] Incorrect instruction packet!"
+                                        "[TxRxResult] Now receiving status packet!"
+                                        "[TxRxResult] There is no status packet!"
+                                        "[TxRxResult] Incorrect status packet!"
+                                        "[TxRxResult] Protocol does not support this function!"
 
     "send_servo_status_error":
-            possible error for send pose_speed:
-                "[ServoStatus] Input voltage error!"
-                "[ServoStatus] Angle sen error!"
-                "[ServoStatus] Overheat error!"
-                "[ServoStatus] OverEle error!"
-                "[ServoStatus] Overload error!"
+                               possible error for send pose_speed:
+                                        "[ServoStatus] Input voltage error!"
+                                        "[ServoStatus] Angle sen error!"
+                                        "[ServoStatus] Overheat error!"
+                                        "[ServoStatus] OverEle error!"
+                                        "[ServoStatus] Overload error!"
 
-    "recv_servo_valid": false,      \
-    "recv_servo_pos_val": 99999,    |
-    "recv_servo_torque_val": 99999, \ same 
-    "recv_servo_speed_val": 99999,  / as above
-    "recv_servo_commu_result": "",  |  
-    "recv_servo_status_error": "",  /
-    "time_stamp":  In seconds, systme time 
+    "recv_servo_valid"       : false,                  \
+    "recv_servo_pos_val"     : 99999,                  |
+    "recv_servo_torque_val"  : 99999,                  \ same 
+    "recv_servo_speed_val"   : 99999,                  / as above
+    "recv_servo_commu_result": ""   ,                  |  
+    "recv_servo_status_error": ""   ,                  /
+    "time_stamp"             :  In seconds, systme time 
 
 ### Valves and pumps
 
-    "valve_pump_id"     : From 0 (right-middle leg) to 6(right-back leg)
-                            The ID is in counter-clockwise order
+    "valve_pump_id"          : From 0 (right-middle leg) to 6(right-back leg)
+                                 The ID is in counter-clockwise order
 
-    "valve_pump_name"   : "right-middle-valve-pump" ... "right-back-valve-pump"
+    "valve_pump_name"        : "right-middle-valve-pump" ... "right-back-valve-pump"
 
-    "pump_status"       : 0: Pump is leaking air(Sucktion cup is not vacum )  , 
-                          1: Pump is sealed well
+    "pump_status"            : 0: Pump is leaking air(Sucktion cup is not vacum )  , 
+                               1: Pump is sealed well
 
-    "turn_onoff_val_pump" : 0: Turn off valve and pump,
-                            1: Turn on valve and pump 
-                            2: No action 
+    "turn_onoff_val_pump"    : 0: Turn off valve and pump,
+                               1: Turn on valve and pump 
+                               2: No action 
 
-    "time_stamp"        : In seconds, systme time
+    "time_stamp"             : In seconds, systme time
     
 
 

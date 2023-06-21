@@ -1,12 +1,15 @@
-import os
-import json
+import                  os
+import                  json
+import                  time
+import                  copy
+import                  math
+import                  queue
+import                  threading
+
 from tkinter.tix import Tree
-from hexa_servo_io_controller  import MultiServoIOController
-import time
-import threading
-import queue
-import copy
-import math
+from hexa_servo_io_controller\
+                 import MultiServoIOController
+
 
 def test_send_pose():
     multi_servo_io_ctl = MultiServoIOController("servo_config.json","servo_io_commu.json","io_config.json")
@@ -45,7 +48,6 @@ def test_send_pose():
         print("in main")
 
 
-
 def compute_speed(pose_old,pose_new,run_time):
     DEFAULT_SPEED = 500
     VALID_MIN_SPEED = 1
@@ -77,7 +79,7 @@ if __name__ == '__main__':
     run_time_arr = [2,4]
 
     multi_servo_io_ctl = MultiServoIOController("servo_config.json","servo_io_commu.json","io_config.json")
-    send_data = copy.deepcopy(multi_servo_io_ctl.servo_io_commu_template)
+    send_data = copy.deepcopy(multi_servo_io_ctl.svo_io_cmu_tplt)
 
     for j in range(1):
         # update valves 
