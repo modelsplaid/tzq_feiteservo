@@ -128,9 +128,32 @@ class BotCmuMsgType:
         else: 
             self.cmu_msg_dic = cmu_msg_dic
     
+    def set_rcv_one_svo(self,svo_id:int):
+        '''
+        Given svo_id, set receive  from servo's                                                                     pulse position, raw torque value, and raw speed value  
+        
+        Param svo_id   : 1--18
+        Param pulse_val: Pulse position 
+        Param torq_raw : Torque in raw format
+        Param spd_raw  : speed in pulses/sec
+        return         : self.cmu_msg_dic
+        '''
+        svo_idx = self.ssvo_head+str(int(svo_id))
+
+        self.cmu_msg_dic["serial_servos"][svo_idx]['recv_servo_valid'] = True
+
+        # torq 
+        torq_raw = self.cmu_msg_dic["serial_servos"][svo_idx]["recv_servo_torque_val"]
+        # spd 
+        spd_raw  = self.cmu_msg_dic["serial_servos"][svo_idx]["recv_servo_speed_val" ]
+        # pose 
+        pulse_val= self.cmu_msg_dic["serial_servos"][svo_idx]["recv_servo_pos_val"   ]
+
+        return [pulse_val,spd_raw,torq_raw]
+
     def set_snd_one_svo(self,svo_id:int,pulse_val:int=0,spd_raw:int=100,torq_raw:int=100):
         '''
-        Given svo_id, set servo's pulse position, raw torque value, and raw speed value  
+        Given svo_id, set send to servo's pulse position, raw torque value, and raw speed value  
         
         Param svo_id   : 1--18
         Param pulse_val: Pulse position 
@@ -176,7 +199,7 @@ class BotCmuMsgType:
     
     def get_rcv_one_svo(self,svo_id:int)->List[Union[int,int,int]]:
         '''
-        Given svo_id, Get servo's pulse position, raw torque value, and raw speed value  
+        Given svo_id, Get receive from servo's pulse position, raw torque value, and raw speed value  
 
         Param svo_id   : 1--18
         return         : [pulse,spd,torq,tstmp] if no valid data, return [None,None,None`]
@@ -184,6 +207,41 @@ class BotCmuMsgType:
         '''
 
         svo_idx = self.ssvo_head+str(int(svo_id))
+
+        if (self.cmu_msg_dic["serial_servos"][svo_idx]['recv_servo_valid'] == True):
+            # torq 
+            torq_raw  = self.cmu_msg_dic["serial_servos"][svo_idx]["recv_servo_torque_val"]
+            # spd 
+            spd_raw   = self.cmu_msg_dic["serial_servos"][svo_idx]["recv_servo_speed_val" ] 
+            # pose 
+            pulse_val = self.cmu_msg_dic["serial_servos"][svo_idx]["recv_servo_pos_val"   ]
+            # tstamp 
+            tstmp     = self.cmu_msg_dic["serial_servos"][svo_idx]["recv_stamp"           ]
+            return [pulse_val,spd_raw,torq_raw,tstmp]
+        
+        else: 
+            [None,None,None,None]
+
+    def get_snd_valid_stat(self,svo_id:int)->bool:
+        """
+        Get the send to servo's message valid state 
+
+        """
+        svo_idx = self.ssvo_head+str(int(svo_id))
+        vad_stat = self.cmu_msg_dic["serial_servos"][svo_idx]['send_servo_valid'] 
+        
+        return vad_stat
+    
+    def get_snd_one_svo(self,svo_id:int)->List[Union[int,int,int]]:
+        '''
+        Given svo_id, Get send to servo's pulse position, raw torque value, and raw speed value  
+
+        Param svo_id   : 1--18
+        return         : [pulse,spd,torq,tstmp] if no valid data, return [None,None,None`]
+
+        '''
+
+        svo_idx  = self.ssvo_head+str(int(svo_id))
 
         if (self.cmu_msg_dic["serial_servos"][svo_idx]['send_servo_valid'] == True):
             # torq 
@@ -198,7 +256,6 @@ class BotCmuMsgType:
         
         else: 
             [None,None,None,None]
-
 
     def print_sel_row(self,svo_row:int=None, vpump_row:int=None,elmt_head = True):
         '''

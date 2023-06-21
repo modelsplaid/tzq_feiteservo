@@ -1,12 +1,11 @@
 
-import sys, tty, termios
 import os
 import json
 import time
-import threading
-import queue
 import copy
-
+import queue
+import threading
+import sys, tty, termios
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(SCRIPT_DIR)
@@ -16,10 +15,12 @@ from hexa_servo_sdk.sms_sts                 import *
 from hexa_servo_sdk.protocol_packet_handler import *
 from hexa_servo_sdk.hexa_servo_controller   import ServoController
 
+from custom_type.comu_msg_type              import BotCmuMsgType
+
 RUN_IN_SIMULATE = True
 
 if RUN_IN_SIMULATE == False:
-    from raspi_io_sdk.valve_controller          import ValveController
+    from raspi_io_sdk.valve_controller      import ValveController
 
 fd = sys.stdin.fileno()
 old_settings = termios.tcgetattr(fd)
@@ -67,51 +68,59 @@ class MultiServoIOController:
         print("loading servo communication template")
         with open(self.io_svo_cmu_tplt_fil, "r") as fObj:
             self.svo_io_cmu_tplt = json.load(fObj)
-        print("self.svo_io_cmu_tplt: " + str(self.svo_io_cmu_tplt))
+        #print("self.svo_io_cmu_tplt: " + str(self.svo_io_cmu_tplt))
 
     def serial_servo_thread(self,name):        
 
         while(True):            
-            servo_in_out_info = copy.deepcopy(self.svo_io_cmu_tplt)
+            servo_in_out_info = BotCmuMsgType("servo_in_out_info")
 
-            #1. send to  servo msgs
+            #1. send to servo msgs
             if (self.serial_send_queue.empty() == False):
-                one_send_data = self.serial_send_queue.get()
-                #print("---Setting servo status ")
+
                 
-                for i in one_send_data["serial_servos"]:
+                one_send_data = self.serial_send_queue.get()
+
+                one_send_data = BotCmuMsgType("temperal")
+
+                
+                for i in range(1,one_send_data.num_svos+1):
+
                     servo_id = one_send_data["serial_servos"][i]["device_id"]
                     #print("Set servo index: "+ i)
                     # send out to each servo
-                    if(one_send_data["serial_servos"][i]['send_servo_valid'] is True):
-                        send_servo_pos_val    = one_send_data["serial_servos"][i]["send_servo_pos_val"   ]
-                        send_servo_speed_val  = one_send_data["serial_servos"][i]["send_servo_speed_val" ]
-                        send_servo_torque_val = one_send_data["serial_servos"][i]["send_servo_torque_val"]
+                    if(one_send_data.get_snd_valid_stat(i) is True):
 
-                        servo_in_out_info["serial_servos"][i]['send_servo_valid']      = True
-                        servo_in_out_info["serial_servos"][i]["send_servo_pos_val"]    = send_servo_pos_val
-                        servo_in_out_info["serial_servos"][i]["send_servo_speed_val"]  = send_servo_speed_val
-                        servo_in_out_info["serial_servos"][i]["send_servo_torque_val"] = send_servo_torque_val
+
+                        [pos,spd,torq] = one_send_data.get_snd_one_svo(i)
+
+
+                        servo_in_out_info.set_snd_one_svo(i,pos,spd,torq)
+
 
                         if RUN_IN_SIMULATE == False:
-                            servo_and_commu_stats = self.servos_ctl.setTorque(send_servo_torque_val,servo_id)
+                            servo_and_commu_stats = self.servos_ctl.setTorque(torq,i)
+
+                        
+                        # todo: here: 
+                        # todo: here: 
+                        # todo: here: 
+                        # todo: here: 
 
                         servo_in_out_info["serial_servos"][i]["send_servo_torque_stats"] = servo_and_commu_stats
                         time.sleep(0.001)
 
                         if RUN_IN_SIMULATE == False:
-                            (scs_comm_result_explain,scs_servo_stat_err_explain) = \
-                                                    self.servos_ctl.writePoseSpeed(send_servo_pos_val,\
-                                                                            send_servo_speed_val,servo_id)
+                            (scs_comm_expl,scs_svo_err_expl) = self.servos_ctl.writePoseSpeed(pos,spd,i)
                         else: 
-                            scs_comm_result_explain = ""
-                            scs_servo_stat_err_explain = ""
+                            scs_comm_expl    = ""
+                            scs_svo_err_expl = ""
 
                         servo_in_out_info["serial_servos"][i]["send_servo_pos_stats"] =\
-                             scs_comm_result_explain + scs_servo_stat_err_explain
+                             scs_comm_expl + scs_svo_err_expl
 
                         servo_in_out_info["serial_servos"][i]["send_servo_speed_stats"] =\
-                             scs_comm_result_explain + scs_servo_stat_err_explain
+                             scs_comm_expl + scs_svo_err_expl
 
                         time.sleep(0.001)
 
