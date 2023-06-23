@@ -3,6 +3,7 @@ import os
 import json
 import time
 import copy
+
 import queue
 import threading
 import sys, tty, termios
@@ -16,6 +17,7 @@ from hexa_servo_sdk.protocol_packet_handler import *
 from hexa_servo_sdk.hexa_servo_controller   import ServoController
 
 from custom_type.comu_msg_type              import BotCmuMsgType
+
 
 RUN_IN_SIMULATE = True
 
@@ -48,7 +50,7 @@ class MultiServoIOController:
         if RUN_IN_SIMULATE == False:
             # parse config params for rpi4 io
             self.valpump_pump_ctl    = ValveController(io_json_cfg_fil)
-            self.io_actions          = self.valpump_pump_ctl.getValvePinoutConfigActions()        
+            self.vpump_acts          = self.valpump_pump_ctl.getValvePinoutConfigActions()        
             self.servos_ctl          = ServoController(svo_json_cfg_fil)
 
         self.hwr_cmu_thd         = threading.Thread(target=self.serial_servo_thread, args=(2,))
@@ -73,125 +75,85 @@ class MultiServoIOController:
     def serial_servo_thread(self,name):        
 
         while(True):            
-            servo_in_out_info = BotCmuMsgType("servo_in_out_info")
+            svo_io_msg = BotCmuMsgType("svo_io_msg")
 
             #1. send to servo msgs
             if (self.serial_send_queue.empty() == False):
 
                 
                 one_send_data = self.serial_send_queue.get()
-
-                one_send_data = BotCmuMsgType("temperal")
-
                 
-                for i in range(1,one_send_data.num_svos+1):
+                #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                # This line will be deleted later 
+                one_send_data = BotCmuMsgType("temperal") 
+                #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-                    servo_id = one_send_data["serial_servos"][i]["device_id"]
-                    #print("Set servo index: "+ i)
-                    # send out to each servo
+                for i in range(1,one_send_data.get_num_svos()+1):
+
+                    # Send out to each servo
                     if(one_send_data.get_snd_valid_stat(i) is True):
 
-
                         [pos,spd,torq] = one_send_data.get_snd_one_svo(i)
-
-
-                        servo_in_out_info.set_snd_one_svo(i,pos,spd,torq)
-
+                        svo_io_msg.set_snd_one_svo(i,pos,spd,torq)
 
                         if RUN_IN_SIMULATE == False:
-                            servo_and_commu_stats = self.servos_ctl.setTorque(torq,i)
-
-                        
-                        # todo: here: 
-                        # todo: here: 
-                        # todo: here: 
-                        # todo: here: 
-
-                        servo_in_out_info["serial_servos"][i]["send_servo_torque_stats"] = servo_and_commu_stats
-                        time.sleep(0.001)
-
-                        if RUN_IN_SIMULATE == False:
-                            (scs_comm_expl,scs_svo_err_expl) = self.servos_ctl.writePoseSpeed(pos,spd,i)
+                            svo_cmu_stat = self.servos_ctl.setTorque(torq,i)
+                            time.sleep(0.001)
+                            (cmu_expl,err_msg) = self.servos_ctl.writePoseSpeed(pos,spd,i)
                         else: 
-                            scs_comm_expl    = ""
-                            scs_svo_err_expl = ""
-
-                        servo_in_out_info["serial_servos"][i]["send_servo_pos_stats"] =\
-                             scs_comm_expl + scs_svo_err_expl
-
-                        servo_in_out_info["serial_servos"][i]["send_servo_speed_stats"] =\
-                             scs_comm_expl + scs_svo_err_expl
-
+                            cmu_expl = ""
+                            err_msg  = ""
+                        
+                        svo_io_msg.set_snd_stat_one_svo(i,svo_cmu_stat,cmu_expl+err_msg,cmu_expl+err_msg)                        
                         time.sleep(0.001)
 
                 #3. Set IO status  
-                for i in  one_send_data["valve_pumps"]:
-                    #"turn_onoff_val_pump" : 0: Turn off valve and pump,
-                    #                        1: Turn on valve and pump 
-                    #                        2: No action 
-                    OnOff =  one_send_data["valve_pumps"][i]["turn_onoff_val_pump"] 
+                for i in  range(one_send_data.get_num_legs()):
 
-                    if  (OnOff == self.io_actions["turn_off"] or OnOff == self.io_actions["turn_on"] ):
+                    OnOff =  one_send_data.get_ileg_vpumps(i)
+
+                    if  (OnOff == self.vpump_acts["turn_off"] or OnOff == self.vpump_acts["turn_on"] ):
                         #print("setting io: name: "+str(i)+" onoff: "+str(OnOff)  )
                         self.valpump_pump_ctl.setValveOnOffName(OnOff,i)
-
-                    elif(OnOff == self.io_actions["no_action"]):
+                    elif(OnOff == self.vpump_acts["no_action"]):
                         pass
                     else:
                         print("!!! invalid parameters for io actiosn")
-
-                # update recv queue        
-                servo_in_out_info["valve_pumps"] = one_send_data["valve_pumps"]
+                        
+                # update recv queue    
+                svo_io_msg.set_ileg_vpumps(i,one_send_data.get_ileg_vpumps(i))    
 
             #2. Get servo msgs
-            for i in servo_in_out_info["serial_servos"]:
+            
+            # todo: here
+            for i in range(1,svo_io_msg.get_num_svos()+1):
                 
-                servo_in_out_info["serial_servos"][i]['recv_servo_valid'] = True
-                #print("Get servo index: "+ i)
-                servo_id = servo_in_out_info["serial_servos"][i]["device_id"]
                 # get current pose speed
-
-                
                 if RUN_IN_SIMULATE == False:
-                    (pose,speed,comm_result,comm_result_explain,servo_err) =\
-                            self.servos_ctl.getPoseSpeed(servo_id)
+                    (pose,speed,comu_rslt,comu_rslt_expn,servo_err) =\
+                                                        self.servos_ctl.getPoseSpeed(i)
+                    (torque_val,cmu_tq_stat) = self.servos_ctl.getPresentTorque(i)
+                    
                 else: 
-                    pose                = 0
-                    speed               = 0
-                    servo_err           = "simulation"
-                    comm_result_explain = "simulation"
-
-
-                servo_in_out_info["serial_servos"][i]["recv_servo_pos_val"]     = pose
-                servo_in_out_info["serial_servos"][i]["recv_servo_speed_val"]   = speed
-                servo_in_out_info["serial_servos"][i]["recv_servo_pos_stats"]   = comm_result_explain+servo_err
-                servo_in_out_info["serial_servos"][i]["recv_servo_speed_stats"] = comm_result_explain+servo_err
+                    pose           = 0
+                    speed          = 0
+                    servo_err      = "simulation"
+                    comu_rslt_expn = "simulation"
+                    torque_val     = 0
+                    cmu_tq_stat    = "simulation"
+                    
+                svo_io_msg.set_rcv_one_svo(i,pose,speed,torque_val)
+                svo_io_msg.set_recv_stat_one_svo(i,comu_rslt_expn+servo_err,"",cmu_tq_stat)
                 time.sleep(0.001)
-
-                if RUN_IN_SIMULATE == False:
-                    (torque_val,commu_and_servo_stat) = self.servos_ctl.getPresentTorque(servo_id)
-                else: 
-                    torque_val           = 0
-                    commu_and_servo_stat = "simulation"
-
-                # get current torque
-                servo_in_out_info["serial_servos"][i]["recv_servo_torque_val"]   = torque_val
-                servo_in_out_info["serial_servos"][i]["recv_servo_torque_stats"] = commu_and_servo_stat
-                #print("torque_val: "+str(torque_val) )
                 
                 # get time
-                servo_in_out_info["serial_servos"][i]["time_stamp"] = time.monotonic()
-                time_stamp = servo_in_out_info["serial_servos"][i]["time_stamp"]
-
+                svo_io_msg.set_svo_tstamp(i,time.monotonic())
                 time.sleep(0.001)
-                #print("servo id: "+str(servo_id)+" pose: "+str(pose)+\
-                #    " speed: "+str(speed)+\
-                #    " recv_servo_torque_val:"+\
-                #    str(servo_in_out_info[i]["recv_servo_torque_val"])+\
-                #    " time_stamp:"+str(time_stamp))
                 
             #4. Put received serial data in recv queue 
-            self.serial_recv_queue.put(servo_in_out_info)
+            self.serial_recv_queue.put(svo_io_msg)
             
             #5. sleep a while
             self.sleep_freq_hz(self.hwr_recv_freq)

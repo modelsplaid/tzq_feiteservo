@@ -1,4 +1,6 @@
 from typing                     import List,Union
+import curses
+from copy import deepcopy 
 
 class BotCmuMsgType:
     __slots__ = ("cmu_msg_dic","name")
@@ -126,9 +128,9 @@ class BotCmuMsgType:
         if cmu_msg_dic == None:
             self.cmu_msg_dic = cmu_msg_dic_tmplt
         else: 
-            self.cmu_msg_dic = cmu_msg_dic
+            self.cmu_msg_dic = deepcopy(cmu_msg_dic)
     
-    def set_rcv_one_svo(self,svo_id:int):
+    def set_rcv_one_svo(self,svo_id:int,pulse_val,spd_raw ,torq_raw ):
         '''
         Given svo_id, set receive  from servo's                                                                     pulse position, raw torque value, and raw speed value  
         
@@ -143,14 +145,48 @@ class BotCmuMsgType:
         self.cmu_msg_dic["serial_servos"][svo_idx]['recv_servo_valid'] = True
 
         # torq 
-        torq_raw = self.cmu_msg_dic["serial_servos"][svo_idx]["recv_servo_torque_val"]
+        self.cmu_msg_dic["serial_servos"][svo_idx]["recv_servo_torque_val"] = int(torq_raw) 
         # spd 
-        spd_raw  = self.cmu_msg_dic["serial_servos"][svo_idx]["recv_servo_speed_val" ]
+        self.cmu_msg_dic["serial_servos"][svo_idx]["recv_servo_speed_val" ] = int(spd_raw )
         # pose 
-        pulse_val= self.cmu_msg_dic["serial_servos"][svo_idx]["recv_servo_pos_val"   ]
+        self.cmu_msg_dic["serial_servos"][svo_idx]["recv_servo_pos_val"   ] = int(pulse_val)
+        
+    def set_recv_stat_one_svo(self,svo_id:int,pulse_sta:str="",spd_sta:str="",torq_sta:str=""):
+        '''
+        Given svo_id, set send to servo's status for pulse position, raw torque value, and raw speed  
+        
+        Param svo_id   : 1--18
+        Param pulse_sta: In str  
+        Param torq_sta : In str 
+        Param spd_sta  : In str 
+        return         : self.cmu_msg_dic
+        '''
+        svo_idx = self.ssvo_head+str(int(svo_id))
 
-        return [pulse_val,spd_raw,torq_raw]
+        self.cmu_msg_dic["serial_servos"][svo_idx]["recv_servo_torque_stats"] = pulse_sta
+        self.cmu_msg_dic["serial_servos"][svo_idx]["recv_servo_speed_stats" ] = spd_sta
+        self.cmu_msg_dic["serial_servos"][svo_idx]["recv_servo_pos_stats"   ] = torq_sta
 
+        return self.cmu_msg_dic
+
+    def set_snd_stat_one_svo(self,svo_id:int,pulse_sta:str="",spd_sta:str="",torq_sta:str=""):
+        '''
+        Given svo_id, set send to servo's status for pulse position, raw torque value, and raw speed  
+        
+        Param svo_id   : 1--18
+        Param pulse_sta: In str  
+        Param torq_sta : In str 
+        Param spd_sta  : In str 
+        return         : self.cmu_msg_dic
+        '''
+        svo_idx = self.ssvo_head+str(int(svo_id))
+
+        self.cmu_msg_dic["serial_servos"][svo_idx]["send_servo_torque_stats"] = pulse_sta
+        self.cmu_msg_dic["serial_servos"][svo_idx]["send_servo_speed_stats" ] = spd_sta
+        self.cmu_msg_dic["serial_servos"][svo_idx]["send_servo_pos_stats"   ] = torq_sta
+
+        return self.cmu_msg_dic
+        
     def set_snd_one_svo(self,svo_id:int,pulse_val:int=0,spd_raw:int=100,torq_raw:int=100):
         '''
         Given svo_id, set send to servo's pulse position, raw torque value, and raw speed value  
@@ -164,16 +200,27 @@ class BotCmuMsgType:
         svo_idx = self.ssvo_head+str(int(svo_id))
 
         # torq 
-        self.cmu_msg_dic["serial_servos"][svo_idx]["send_servo_torque_val"] = torq_raw
-        # spd 
-        self.cmu_msg_dic["serial_servos"][svo_idx]["send_servo_speed_val" ] = spd_raw
-        # pose 
-        self.cmu_msg_dic["serial_servos"][svo_idx]["send_servo_pos_val"   ] = pulse_val
+        self.cmu_msg_dic["serial_servos"][svo_idx]["send_servo_torque_val"] = int(torq_raw)
+        self.cmu_msg_dic["serial_servos"][svo_idx]["send_servo_speed_val" ] = int(spd_raw)
+        self.cmu_msg_dic["serial_servos"][svo_idx]["send_servo_pos_val"   ] = int(pulse_val)
         self.cmu_msg_dic["serial_servos"][svo_idx]['send_servo_valid'     ] = True
 
         return self.cmu_msg_dic
 
-    def set_ileg_vpumps(self,ileg:int,dis_ena=2):
+    def set_svo_tstamp(self,svo_id:int,tstamp:float):
+        '''
+        Given svo_id, set send to servo's pulse position, raw torque value, and raw speed value  
+        
+        Param svo_id   : 1--18
+        return         : self.cmu_msg_dic
+        '''
+        
+        svo_idx = self.ssvo_head+str(int(svo_id))
+        self.cmu_msg_dic["serial_servos"][svo_idx]["time_stamp"] = tstamp
+        
+        return self.cmu_msg_dic
+    
+    def set_ileg_vpumps(self,ileg:int,dis_ena:bool=2):
         '''
         Set vpumps by given leg index and  dis_ena status
         param : dis_ena    : OFF_VALV = 0, ON_VALV = 1, NO_ACT_VALV = 2
@@ -193,6 +240,16 @@ class BotCmuMsgType:
             self.cmu_msg_dic["valve_pumps"][leg_nam]["turn_onoff_val_pump"] = dis_ena
 
         return self.cmu_msg_dic
+
+    def get_ileg_vpumps(self,ileg:int)->bool:
+        '''
+        Set vpumps by given leg index and  dis_ena status
+        return: dis_ena    : OFF_VALV = 0, ON_VALV = 1, NO_ACT_VALV = 2
+        
+        '''    
+        dis_ena = self.cmu_msg_dic["valve_pumps"][self.leg_nams[ileg]]["turn_onoff_val_pump"] 
+        
+        return dis_ena
 
     def get_cmu_msg_dic(self):
         return self.cmu_msg_dic
@@ -256,6 +313,14 @@ class BotCmuMsgType:
         
         else: 
             [None,None,None,None]
+
+    def get_num_svos(self):
+        return self.num_svos
+    
+    def get_num_legs(self):
+        return self.num_legs
+    
+
 
     def print_sel_row(self,svo_row:int=None, vpump_row:int=None,elmt_head = True):
         '''
@@ -340,9 +405,8 @@ class BotCmuMsgType:
         print(apend_str)
         return(apend_str)
     
-    def __str__(self):
+    def form_str(self):
         cmu_keys = list(self.cmu_msg_dic.keys())
-
         apend_str = ""
 
         # For servos: 
@@ -405,16 +469,42 @@ class BotCmuMsgType:
             apend_str = apend_str + name + ":"+vpump_id+recv_stat+ on_off+t_stamp+ " \n"
 
         return(apend_str)
+        
+    def pt_table(self):
+        
+        # todo: work on this 
+        stdscr = curses.initscr()        
+        apend_str = self.form_str()
+        stdscr.addstr(0, 0, str(apend_str))
+        stdscr.refresh()
+        
+    def __str__(self):
+
+        apend_str = self.form_str()
+
+
+        return(apend_str)
     
 def test1():
+    import time
     cmu = BotCmuMsgType("cmu")
-
+    stdscr = curses.initscr()
+    #win = curses.newwin(200,200, 0, 0)
+    #win.refresh()
+    for i in range(5):
+        
+        cmu.set_all_vpumps(i%2)
+        cmu.set_snd_one_svo(3+i,12,13,136)
+        
+        stdscr.addstr(0, 0, str(cmu))
+        stdscr.refresh()
+        #print(cmu)
+        time.sleep(0.5)
+        
+        
+        
     cmu.print_sel_row(None,1)
-    cmu.set_all_vpumps(1)
-    cmu.set_snd_one_svo(3,12,13,136)
-
-    print(cmu)
-    print("cmu.get_rcv_one_svo(3): "+str(cmu.get_rcv_one_svo(3)))
+    #print("cmu.get_rcv_one_svo(3): "+str(cmu.get_rcv_one_svo(3)))
 
 
 if __name__ == "__main__":
