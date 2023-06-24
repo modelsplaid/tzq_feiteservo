@@ -19,7 +19,7 @@ from hexa_servo_sdk.hexa_servo_controller   import ServoController
 from custom_type.comu_msg_type              import BotCmuMsgType
 
 
-RUN_IN_SIMULATE = True
+RUN_IN_SIMULATE = False
 
 if RUN_IN_SIMULATE == False:
     from raspi_io_sdk.valve_controller      import ValveController
@@ -82,13 +82,6 @@ class MultiServoIOController:
 
                 
                 one_send_data = self.serial_send_queue.get()
-                
-                #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                # This line will be deleted later 
-                one_send_data = BotCmuMsgType("temperal") 
-                #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
                 for i in range(1,one_send_data.get_num_svos()+1):
 
