@@ -121,7 +121,7 @@ def test_send_pose():
         multi_servo_io_ctl.push_to_send_queue(send_data)        
         time.sleep(1)
         
-        #one_frame_recv_servo = multi_servo_io_ctl.pop_recv_queue()
+        #one_frame_recv_servo = multi_servo_io_ctl.pop_recv_q_dict()
         #print("one_frame_recv_servo: "+str(one_frame_recv_servo))
         print("in main")
 

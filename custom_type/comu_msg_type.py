@@ -320,6 +320,8 @@ class BotCmuMsgType:
     def get_num_legs(self):
         return self.num_legs
     
+    def get_ileg_names(self,i:int):
+        return self.leg_nams[i]
 
 
     def print_sel_row(self,svo_row:int=None, vpump_row:int=None,elmt_head = True):

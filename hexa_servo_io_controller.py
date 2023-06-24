@@ -57,11 +57,13 @@ class MultiServoIOController:
         self.hwr_cmu_thd.daemon  = True
         self.hwr_cmu_thd.start()    
 
-    def pop_recv_queue(self):
+    def pop_recv_q_dict(self):
         if(self.serial_recv_queue.empty()==False):
             return False
         else:    
-            return self.serial_recv_queue.get()
+            msg_obj = self.serial_recv_queue.get()
+            recv_dict = msg_obj.get_cmu_msg_dic()
+            return recv_dict
 
     def push_to_send_queue(self,servo_commu):
         self.serial_send_queue.put(servo_commu)
@@ -81,14 +83,15 @@ class MultiServoIOController:
             if (self.serial_send_queue.empty() == False):
 
                 
-                one_send_data = self.serial_send_queue.get()
-
+                one_send_data_dic = self.serial_send_queue.get()
+                one_send_data = BotCmuMsgType("one_send_data",one_send_data_dic)
+                
                 for i in range(1,one_send_data.get_num_svos()+1):
 
                     # Send out to each servo
                     if(one_send_data.get_snd_valid_stat(i) is True):
 
-                        [pos,spd,torq] = one_send_data.get_snd_one_svo(i)
+                        [pos,spd,torq,tstmp] = one_send_data.get_snd_one_svo(i)
                         svo_io_msg.set_snd_one_svo(i,pos,spd,torq)
 
                         if RUN_IN_SIMULATE == False:
@@ -108,8 +111,11 @@ class MultiServoIOController:
                     OnOff =  one_send_data.get_ileg_vpumps(i)
 
                     if  (OnOff == self.vpump_acts["turn_off"] or OnOff == self.vpump_acts["turn_on"] ):
-                        #print("setting io: name: "+str(i)+" onoff: "+str(OnOff)  )
-                        self.valpump_pump_ctl.setValveOnOffName(OnOff,i)
+                        print("setting io: name: "+str(i)+" onoff: "+str(OnOff)  )
+                        
+                        leg_name = one_send_data.get_ileg_names(i)
+                        
+                        self.valpump_pump_ctl.setValveOnOffName(OnOff,leg_name)
                     elif(OnOff == self.vpump_acts["no_action"]):
                         pass
                     else:
