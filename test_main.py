@@ -43,7 +43,7 @@ def test_with_valve():
     pose_arr = [initpose,2000,1500]
     run_time_arr = [2,4]
 
-    multi_servo_io_ctl = MultiServoIOController("servo_config.json","servo_io_commu.json","io_config.json")
+    multi_servo_io_ctl = MultiServoIOController("servo_config.json","io_config.json")
     send_data = copy.deepcopy(multi_servo_io_ctl.svo_io_cmu_tplt)
 
     for j in range(1):
@@ -99,7 +99,7 @@ def test_with_valve():
 
 def test_send_pose():
     
-    multi_servo_io_ctl = MultiServoIOController("servo_config.json","servo_io_commu.json","io_config.json")
+    multi_servo_io_ctl = MultiServoIOController("servo_config.json","io_config.json")
     while True:
         
         #send_data = copy.deepcopy(multi_servo_io_ctl.servo_io_commu_template)

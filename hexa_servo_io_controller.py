@@ -30,7 +30,6 @@ old_settings = termios.tcgetattr(fd)
 class MultiServoIOController:
     def __init__(self                                      ,\
                 svo_json_cfg_fil    = "servo_config.json"  ,\
-                io_svo_cmu_tplt_fil = "servo_io_commu.json",\
                 io_json_cfg_fil     = "io_config.json"     ,\
                 ):
         
@@ -40,8 +39,6 @@ class MultiServoIOController:
             servo_config         = json.load(fObj)
             self.hwr_recv_freq   = servo_config['serial_params']["SERIAL_MAX_RECV_FREQ"]
 
-        self.io_svo_cmu_tplt_fil = io_svo_cmu_tplt_fil
-        self.svo_io_cmu_tplt     = None
         self.serial_recv_queue   = queue.Queue()
         self.serial_send_queue   = queue.Queue()
 
@@ -67,12 +64,6 @@ class MultiServoIOController:
 
     def push_to_send_queue(self,servo_commu):
         self.serial_send_queue.put(servo_commu)
-
-    def load_servo_commu_template(self):
-        print("loading servo communication template")
-        with open(self.io_svo_cmu_tplt_fil, "r") as fObj:
-            self.svo_io_cmu_tplt = json.load(fObj)
-        #print("self.svo_io_cmu_tplt: " + str(self.svo_io_cmu_tplt))
 
     def serial_servo_thread(self,name):        
 
