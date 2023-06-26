@@ -42,8 +42,6 @@ class MultiServoIOController:
         self.serial_recv_queue   = queue.Queue()
         self.serial_send_queue   = queue.Queue()
 
-        self.load_servo_commu_template()
-
         if RUN_IN_SIMULATE == False:
             # parse config params for rpi4 io
             self.valpump_pump_ctl    = ValveController(io_json_cfg_fil)
