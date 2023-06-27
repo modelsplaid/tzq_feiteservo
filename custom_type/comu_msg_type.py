@@ -116,12 +116,14 @@ class BotCmuMsgType:
     
     def set_rcv_one_svo(self,svo_id:int,pulse_val,spd_raw ,torq_raw ):
         '''
-        Given svo_id, set receive  from servo's                                                                     pulse position, raw torque value, and raw speed value  
-        
+        Given svo_id, set receive  from servo's 
+            pulse position, raw torque value, and raw speed value  
+
         Param svo_id   : 1--18
         Param pulse_val: Pulse position 
         Param torq_raw : Torque in raw format
         Param spd_raw  : speed in pulses/sec
+
         return         : self.cmu_msg_dic
         '''
         svo_idx = self.ssvo_head+str(int(svo_id))
@@ -139,6 +141,7 @@ class BotCmuMsgType:
         Param pulse_sta: In str  
         Param torq_sta : In str 
         Param spd_sta  : In str 
+
         return         : self.cmu_msg_dic
         '''
         svo_idx = self.ssvo_head+str(int(svo_id))
@@ -157,6 +160,7 @@ class BotCmuMsgType:
         Param pulse_sta: In str  
         Param torq_sta : In str 
         Param spd_sta  : In str 
+
         return         : self.cmu_msg_dic
         '''
         svo_idx = self.ssvo_head+str(int(svo_id))
@@ -175,6 +179,7 @@ class BotCmuMsgType:
         Param pulse_val: Pulse position 
         Param torq_raw : Torque in raw format
         Param spd_raw  : speed in pulses/sec
+        
         return         : self.cmu_msg_dic
         '''
         svo_idx = self.ssvo_head+str(int(svo_id))
@@ -212,7 +217,7 @@ class BotCmuMsgType:
     def set_all_vpumps(self,dis_ena=2):
         '''
         Set all vpumps by given dis_ena status
-        param : dis_ena    : OFF_VALV = 0, ON_VALV = 1, NO_ACT_VALV = 2
+        param : dis_ena: OFF_VALV = 0, ON_VALV = 1, NO_ACT_VALV = 2
         return: self.cmu_msg_dic
         '''
 
@@ -308,7 +313,6 @@ class BotCmuMsgType:
         """
         return self.leg_nams[i]
 
-
     def print_sel_row(self,svo_row:int=None, vpump_row:int=None,elmt_head = True):
         '''
         Given svo_row or vpump_row, print out that row. 
@@ -360,8 +364,7 @@ class BotCmuMsgType:
             rspd = "rcvspd:" + f"{recv_spd:+5d},"
             rtq  = "rcvtq:"  + f"{recv_tq :+5d},"
 
-            t_stamp = "t: "+ f"{t_stamp :+6.3f}"
-
+            t_stamp   = "t: "+ f"{t_stamp :+6.3f}"
             apend_str = apend_str + name + ":" + spos + sspd + stq + rpos+ rspd + rtq + t_stamp + " \n"
 
         # For vpumps: 
@@ -399,11 +402,11 @@ class BotCmuMsgType:
         blue_str = '\033[34m'
         gren_str = '\033[32m'
 
-        cmu_keys = list(self.cmu_msg_dic.keys())
+        cmu_keys  = list(self.cmu_msg_dic.keys())
         apend_str = ""
 
         # For servos: 
-        svo_key = cmu_keys[0]
+        svo_key   = cmu_keys[0]
         apend_str = apend_str +gren_str+bold_str+ "##########"+svo_key + ": \n"+off_str
         for sub_key in self.cmu_msg_dic[svo_key]:
 

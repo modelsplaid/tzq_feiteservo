@@ -29,8 +29,8 @@ old_settings = termios.tcgetattr(fd)
 
 class MultiServoIOController:
     def __init__(self                                      ,\
-                svo_json_cfg_fil    = "servo_config.json"  ,\
-                io_json_cfg_fil     = "io_config.json"     ,\
+                svo_json_cfg_fil = "servo_config.json"  ,\
+                io_json_cfg_fil  = "io_config.json"     ,\
                 ):
         
 
@@ -44,19 +44,19 @@ class MultiServoIOController:
 
         if RUN_IN_SIMULATE == False:
             # parse config params for rpi4 io
-            self.valpump_pump_ctl    = ValveController(io_json_cfg_fil)
-            self.vpump_acts          = self.valpump_pump_ctl.getValvePinoutConfigActions()        
-            self.servos_ctl          = ServoController(svo_json_cfg_fil)
+            self.valpump_pump_ctl = ValveController(io_json_cfg_fil)
+            self.vpump_acts       = self.valpump_pump_ctl.getValvePinoutConfigActions()        
+            self.servos_ctl       = ServoController(svo_json_cfg_fil)
 
-        self.hwr_cmu_thd         = threading.Thread(target=self.serial_servo_thread, args=(2,))
-        self.hwr_cmu_thd.daemon  = True
+        self.hwr_cmu_thd          = threading.Thread(target=self.serial_servo_thread, args=(2,))
+        self.hwr_cmu_thd.daemon   = True
         self.hwr_cmu_thd.start()    
 
     def pop_recv_q_dict(self):
         if(self.serial_recv_queue.empty()==False):
             return False
         else:    
-            msg_obj = self.serial_recv_queue.get()
+            msg_obj   = self.serial_recv_queue.get()
             recv_dict = msg_obj.get_cmu_msg_dic()
             return recv_dict
 
