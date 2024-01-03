@@ -1,0 +1,3 @@
+[submodule "custom_type"]
+	path = custom_type
+	url = git@github.com:modelsplaid/custom_type.git
