@@ -24,8 +24,8 @@ RUN_IN_SIMULATE = False
 if RUN_IN_SIMULATE == False:
     from raspi_io_sdk.valve_controller      import ValveController
 
-fd = sys.stdin.fileno()
-old_settings = termios.tcgetattr(fd)
+# fd = sys.stdin.fileno()
+# old_settings = termios.tcgetattr(fd)
 
 class MultiServoIOController:
     def __init__(self                                      ,\
