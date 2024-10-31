@@ -10,16 +10,16 @@ import threading
 import queue
 import copy
 
-fd = sys.stdin.fileno()
-old_settings = termios.tcgetattr(fd)
+# fd = sys.stdin.fileno()
+# old_settings = termios.tcgetattr(fd)
 
-def getch():
-    try:
-        tty.setraw(sys.stdin.fileno())
-        ch = sys.stdin.read(1)
-    finally:
-        termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
-    return ch
+# def getch():
+#     try:
+#         tty.setraw(sys.stdin.fileno())
+#         ch = sys.stdin.read(1)
+#     finally:
+#         termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
+#     return ch
 
 
 class ServoController:
