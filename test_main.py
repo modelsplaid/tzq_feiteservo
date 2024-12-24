@@ -126,6 +126,13 @@ def test_send_pose():
         print("in main")
 
 
+### todo: here add test torq direction pid 
+
+##
+##
+
+
+
 if __name__ == '__main__':
 
     test_send_pose()
