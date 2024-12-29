@@ -80,13 +80,29 @@ class MultiServoIOController:
                     # Send out to each servo
                     if(one_send_data.get_snd_valid_stat(i) is True):
 
-                        [pos,spd,torq,tstmp] = one_send_data.get_snd_one_svo(i)
+                        [pos,spd,torq,tstmp,mode] = one_send_data.get_snd_one_svo(i)
                         svo_io_msg.set_snd_one_svo(i,pos,spd,torq)
-
+                        svo_cmu_stat = ""
+                        cmu_expl = ""
+                        err_msg  = ""
+                        
                         if RUN_IN_SIMULATE == False:
-                            svo_cmu_stat = self.servos_ctl.setTorque(torq,i)
+                            # todo: check code here on set torq
+                            # 1. chec if valid
+                      
+                            if mode == "pos":
+                                print("servo id: ",i,"mode: ",mode)
+                                svo_cmu_stat = self.servos_ctl.setTorque(torq,i)
+                                (cmu_expl,err_msg) = self.servos_ctl.writePoseSpeed(pos,spd,i)
+                                # here
+                            elif mode == "torq":
+                                print("servo id: ",i,"mode: ",mode)
+                            else: 
+                                print("error: servo id: ",i,"mode: ",mode)
+
+                                    
                             time.sleep(0.001)
-                            (cmu_expl,err_msg) = self.servos_ctl.writePoseSpeed(pos,spd,i)
+
                         else: 
                             cmu_expl = ""
                             err_msg  = ""
