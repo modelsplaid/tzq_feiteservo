@@ -65,6 +65,8 @@ class MultiServoIOController:
 
     def serial_servo_thread(self,name):        
 
+        glob_servo_pos = BotCmuMsgType("glob_servo_pos")
+
         while(True):            
             svo_io_msg = BotCmuMsgType("svo_io_msg")
 
@@ -89,17 +91,25 @@ class MultiServoIOController:
                         if RUN_IN_SIMULATE == False:
                             # todo: check code here on set torq
                             # 1. chec if valid
-                      
+                            
+                            print("servo id: ",i,"mode: ",mode)
+
                             if mode == "pos":
-                                print("servo id: ",i,"mode: ",mode)
+
                                 #svo_cmu_stat = self.servos_ctl.setTorque(abs(torq),i)
                                 svo_cmu_stat = self.servos_ctl.setTorque(1000,i)
                                 (cmu_expl,err_msg) = self.servos_ctl.writePoseSpeed(pos,spd,i)
-                                # here
+
                             elif mode == "torq":
-                                print("servo id: ",i,"mode: ",mode)
                                 svo_cmu_stat = self.servos_ctl.setTorque(abs(torq),i)
                                 (cmu_expl,err_msg) = self.servos_ctl.writePoseSpeed(int(pos+200*(torq/abs(torq))),spd,i)
+
+                            elif mode == "torqpos":
+
+                                [servo_pos,...]  = glob_servo_pos.get_snd_one_svo(i)
+                                svo_cmu_stat = self.servos_ctl.setTorque(1000,i)
+                                (cmu_expl,err_msg) = self.servos_ctl.writePoseSpeed(servo_pos,spd,i)
+
                             else: 
                                 print("error: servo id: ",i,"mode: ",mode)
 
@@ -153,10 +163,8 @@ class MultiServoIOController:
                     
                 svo_io_msg.set_rcv_one_svo(i,pose,speed,torque_val)
                 svo_io_msg.set_recv_stat_one_svo(i,comu_rslt_expn+servo_err,"",cmu_tq_stat)
-                time.sleep(0.001)
-                
-                # get time
                 svo_io_msg.set_svo_tstamp(i,time.monotonic())
+                glob_servo_pos.set_snd_one_svo(i,pose)
                 time.sleep(0.001)
                 
             #4. Put received serial data in recv queue 
