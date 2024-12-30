@@ -94,7 +94,7 @@ class MultiServoIOController:
                             
                             print("servo id: ",i,"mode: ",mode)
 
-                            if mode == "pos":
+                            if mode == "pose":
 
                                 #svo_cmu_stat = self.servos_ctl.setTorque(abs(torq),i)
                                 svo_cmu_stat = self.servos_ctl.setTorque(1000,i)
@@ -104,7 +104,7 @@ class MultiServoIOController:
                                 svo_cmu_stat = self.servos_ctl.setTorque(abs(torq),i)
                                 (cmu_expl,err_msg) = self.servos_ctl.writePoseSpeed(int(pos+200*(torq/abs(torq))),spd,i)
 
-                            elif mode == "torqpos":
+                            elif mode == "porq":
 
                                 [servo_pos,...]  = glob_servo_pos.get_snd_one_svo(i)
                                 svo_cmu_stat = self.servos_ctl.setTorque(1000,i)
