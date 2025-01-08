@@ -11,15 +11,22 @@ import sys, tty, termios
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(SCRIPT_DIR)
 
-from hexa_servo_sdk.port_handler            import * 
-from hexa_servo_sdk.sms_sts                 import *
-from hexa_servo_sdk.protocol_packet_handler import *
-from hexa_servo_sdk.hexa_servo_controller   import ServoController
+RUN_IN_SIMULATE = False
+
 
 from custom_type.comu_msg_type              import BotCmuMsgType
 
+try:
+    from hexa_servo_sdk.port_handler            import * 
+    from hexa_servo_sdk.sms_sts                 import *
+    from hexa_servo_sdk.protocol_packet_handler import *
+    from hexa_servo_sdk.hexa_servo_controller   import ServoController
 
-RUN_IN_SIMULATE = False
+except Exception as e:
+
+    print("!!!Faild to import hexa_servo_sdk, run in simulator mode", e)
+    RUN_IN_SIMULATE = True
+
 
 if RUN_IN_SIMULATE == False:
     from raspi_io_sdk.valve_controller      import ValveController
@@ -27,6 +34,7 @@ if RUN_IN_SIMULATE == False:
 # fd = sys.stdin.fileno()
 # old_settings = termios.tcgetattr(fd)
 
+print("RUN_IN_SIMULATE: ",RUN_IN_SIMULATE)
 class MultiServoIOController:
     def __init__(self                                      ,\
                 svo_json_cfg_fil = "servo_config.json"  ,\
