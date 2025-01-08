@@ -82,8 +82,10 @@ class MultiServoIOController:
             if (self.serial_send_queue.empty() == False):
 
                 
-                one_send_data_dic = self.serial_send_queue.get()
-                one_send_data = BotCmuMsgType("one_send_data",one_send_data_dic)
+                one_send_data = self.serial_send_queue.get()
+                print("Type of one_send_data_dic: ", type(one_send_data))
+                print("one_send_data_dic: \n" + str(one_send_data))
+                one_send_data = BotCmuMsgType("one_send_data",one_send_data.get_cmu_msg_dic())
                 
                 for i in range(1,one_send_data.get_num_svos()+1):
 
@@ -136,17 +138,18 @@ class MultiServoIOController:
 
                     OnOff =  one_send_data.get_ileg_vpumps(i)
 
-                    if  (OnOff == self.vpump_acts["turn_off"] or OnOff == self.vpump_acts["turn_on"] ):
-                        print("setting io: name: "+str(i)+" onoff: "+str(OnOff)  )
-                        
-                        leg_name = one_send_data.get_ileg_names(i)
-                        
-                        self.valpump_pump_ctl.setValveOnOffName(OnOff,leg_name)
-                    elif(OnOff == self.vpump_acts["no_action"]):
-                        pass
-                    else:
-                        print("!!! invalid parameters for io actiosn")
-                        
+                    if(RUN_IN_SIMULATE == False):
+                        if  (OnOff == self.vpump_acts["turn_off"] or OnOff == self.vpump_acts["turn_on"] ):
+                            print("setting io: name: "+str(i)+" onoff: "+str(OnOff)  )
+                            
+                            leg_name = one_send_data.get_ileg_names(i)
+                            
+                            self.valpump_pump_ctl.setValveOnOffName(OnOff,leg_name)
+                        elif(OnOff == self.vpump_acts["no_action"]):
+                            pass
+                        else:
+                            print("!!! invalid parameters for io actiosn")
+                            
                 # update recv queue    
                 svo_io_msg.set_ileg_vpumps(i,one_send_data.get_ileg_vpumps(i))    
 

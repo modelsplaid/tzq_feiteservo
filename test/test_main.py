@@ -6,7 +6,12 @@ import      math
 import      queue
 import      threading
 
-from tkinter.tix               import Tree
+import     sys, tty, termios
+
+
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+print("os.path.dirname(os.path.dirname(os.path.abspath(__file__))): "+str(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+
 from hexa_servo_io_controller  import MultiServoIOController
 
 from custom_type.comu_msg_type import BotCmuMsgType
