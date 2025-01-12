@@ -82,11 +82,8 @@ class MultiServoIOController:
             if (self.serial_send_queue.empty() == False):
 
                 
-                one_send_data = self.serial_send_queue.get()
-                print("Type of one_send_data_dic: ", type(one_send_data))
-                print("one_send_data_dic: \n" + str(one_send_data))
-                one_send_data = BotCmuMsgType("one_send_data",one_send_data.get_cmu_msg_dic())
-                
+                one_send_data_dic = self.serial_send_queue.get()
+                one_send_data = BotCmuMsgType("one_send_data",one_send_data_dic)
                 for i in range(1,one_send_data.get_num_svos()+1):
 
                     # Send out to each servo
