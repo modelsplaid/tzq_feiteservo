@@ -101,28 +101,18 @@ class MultiServoIOController:
                         if RUN_IN_SIMULATE == False:
                             # todo: check code here on set torq
                             # 1. chec if valid
-                            
-                            print("servo id: ",i,"mode: ",mode)
-
-                            if mode == "pose":
-
-                                #svo_cmu_stat = self.servos_ctl.setTorque(abs(torq),i)
-                                svo_cmu_stat = self.servos_ctl.setTorque(1000,i)
-                                (cmu_expl,err_msg) = self.servos_ctl.writePoseSpeed(pos,spd,i)
-
-                            elif mode == "torq":
-                                svo_cmu_stat = self.servos_ctl.setTorque(abs(torq),i)
-                                (cmu_expl,err_msg) = self.servos_ctl.writePoseSpeed(int(pos+200*(torq/abs(torq))),spd,i)
-
-                            elif mode == "porq":
-
-                                [servo_pos,_]  = glob_servo_pos.get_snd_one_svo(i)
-                                svo_cmu_stat = self.servos_ctl.setTorque(1000,i)
-                                (cmu_expl,err_msg) = self.servos_ctl.writePoseSpeed(servo_pos,spd,i)
-
-                            else: 
-                                print("error: servo id: ",i,"mode: ",mode)
-
+                            if(pos != None):
+                                if mode == "pos":
+                                    print("servo id: ",i,"mode: ",mode)
+                                    svo_cmu_stat = self.servos_ctl.setTorque(torq,i)
+                                    (cmu_expl,err_msg) = self.servos_ctl.writePoseSpeed(pos,spd,i)
+                                    # here
+                                elif mode == "torq":
+                                    print("servo id: ",i,"mode: ",mode)
+                                else: 
+                                    print("servo id: ",i,"mode: ",mode)
+                            else:
+                                print("servo id: ",i,"will not move. ")   
                                     
                             time.sleep(0.001)
 
