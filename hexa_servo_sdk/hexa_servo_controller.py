@@ -88,7 +88,7 @@ class ServoController:
             self.ADDR_CURRENT_TORQUE_VAL = servo_config['servo_control_table']['ADDR_CURRENT_TORQUE_VAL']
     
     def writePoseSpeed(self,position_val=0,speed_val=0,servo_id = 1):
-        print("servo id: "+str(servo_id)+"write_pose: psoe: "+str(position_val)+ " speed val: "+str(speed_val)+"acc: " +str(self.SCS_MOVING_ACC))
+        #print("servo id: "+str(servo_id)+"write_pose: psoe: "+str(position_val)+ " speed val: "+str(speed_val)+"acc: " +str(self.SCS_MOVING_ACC))
         scs_comm_result, scs_error = self.packetHandler.WritePosEx(servo_id, position_val, speed_val,self.SCS_MOVING_ACC)
         scs_comm_result_explain = ''
         scs_servo_stat_err_explain = ''
