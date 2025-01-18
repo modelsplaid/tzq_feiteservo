@@ -110,10 +110,16 @@ class MultiServoIOController:
                                     (cmu_expl,err_msg) = self.servos_ctl.writePoseSpeed(pos,spd,i)
                                 elif mode == "porq": 
                                     # set current pose to max torq
-                                    print("servo id: ",i,"mode: ",mode,"pose val: ",pos, "spd: ",spd)
+                                    
+                                    #
+                                    # todo: test here
+                                    #
+                                    print("mode: ",mode,"servo id: ",i,"pose val: ",pos, "spd: ",spd,"torq: ",torq)
+                                    
+                                    [cur_pos,_,_,_,_] = glob_servo_pos.get_snd_one_svo(i)
                                     #pos = cur 
                                     svo_cmu_stat = self.servos_ctl.setTorque(100,i)
-                                    (cmu_expl,err_msg) = self.servos_ctl.writePoseSpeed(pos,spd,i)
+                                    (cmu_expl,err_msg) = self.servos_ctl.writePoseSpeed(cur_pos,spd,i)
                             else:
                                 print("!!!!!!servo id: ",i,"will not move. ")   
                                     
