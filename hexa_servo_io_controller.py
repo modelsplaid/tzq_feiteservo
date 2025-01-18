@@ -90,7 +90,7 @@ class MultiServoIOController:
 
                         [pos,spd,torq,tstmp,mode] = one_send_data.get_snd_one_svo(i)
                         
-                        torq = abs(torq)
+
                         svo_io_msg.set_snd_one_svo(i,pos,spd,torq)
                         svo_cmu_stat = ""
                         cmu_expl = ""
@@ -108,17 +108,26 @@ class MultiServoIOController:
                                     (cmu_expl,err_msg) = self.servos_ctl.writePoseSpeed(pos,spd,i)
 
                                 elif mode == "torq":
-                                    print("mode: ",mode,"servo id: ",i,"pose val: ",pos,"torq: ",torq)
+                                    print("---mode: ",mode,"servo id: ",i,"pose val: ",pos,"torq: ",torq)
                                     
-                                    # todo: here add pos offset 
+                                    # todo1: check right leg for the compensation
+                                    # todo2: improve: compensate less for coxa joint
+                                    
+                                    if(torq>=0):
+                                        pos = pos-100
+                                    else:
+                                        pos = pos+100                                         
+                                    
                                     svo_cmu_stat = self.servos_ctl.setTorque(torq,i)
                                     (cmu_expl,err_msg) = self.servos_ctl.writePoseSpeed(pos,spd,i)
                                 elif mode == "porq": 
                                     # set current pose to max torq
                                     
                                     [real_pos,_,_,_,_] = glob_servo_pos.get_snd_one_svo(i)
+                                
                                     print("mode: ",mode,"servo id: ",i,"target pose val: ",pos, "real pos: ", real_pos,"torq: ",torq)
-                                    #pos = cur 
+                                
+                                    torq = abs(torq)
                                     svo_cmu_stat = self.servos_ctl.setTorque(torq,i)
                                     (cmu_expl,err_msg) = self.servos_ctl.writePoseSpeed(real_pos,spd,i)
                             else:
