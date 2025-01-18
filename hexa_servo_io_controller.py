@@ -80,7 +80,6 @@ class MultiServoIOController:
 
             #1. send to servo msgs
             if (self.serial_send_queue.empty() == False):
-
                 
                 one_send_data_dic = self.serial_send_queue.get()
                 one_send_data = BotCmuMsgType("one_send_data",one_send_data_dic)
@@ -90,26 +89,33 @@ class MultiServoIOController:
                     if(one_send_data.get_snd_valid_stat(i) is True):
 
                         [pos,spd,torq,tstmp,mode] = one_send_data.get_snd_one_svo(i)
+                        
+                        torq = abs(torq)
                         svo_io_msg.set_snd_one_svo(i,pos,spd,torq)
                         svo_cmu_stat = ""
                         cmu_expl = ""
                         err_msg  = ""
-                        
+                        #print("servo id: ",i,"mode: ",mode,"pose val: ",pos, "spd: ",spd)
                         if RUN_IN_SIMULATE == False:
                             # todo: check code here on set torq
                             # 1. chec if valid
                             if(pos != None):
-                                if mode == "pos":
-                                    print("servo id: ",i,"mode: ",mode)
+                                if mode == "pose":
+                                    svo_cmu_stat = self.servos_ctl.setTorque(800,i)
+                                    (cmu_expl,err_msg) = self.servos_ctl.writePoseSpeed(pos,spd,i)
+
+                                elif mode == "torq":
+                                    print("mode: ",mode,"servo id: ",i,"pose val: ",pos, "spd: ",spd,"torq: ",torq)
                                     svo_cmu_stat = self.servos_ctl.setTorque(torq,i)
                                     (cmu_expl,err_msg) = self.servos_ctl.writePoseSpeed(pos,spd,i)
-                                    # here
-                                elif mode == "torq":
-                                    print("servo id: ",i,"mode: ",mode)
-                                else: 
-                                    print("servo id: ",i,"mode: ",mode)
+                                elif mode == "porq": 
+                                    # set current pose to max torq
+                                    print("servo id: ",i,"mode: ",mode,"pose val: ",pos, "spd: ",spd)
+                                    #pos = cur 
+                                    svo_cmu_stat = self.servos_ctl.setTorque(100,i)
+                                    (cmu_expl,err_msg) = self.servos_ctl.writePoseSpeed(pos,spd,i)
                             else:
-                                print("servo id: ",i,"will not move. ")   
+                                print("!!!!!!servo id: ",i,"will not move. ")   
                                     
                             time.sleep(0.001)
 
@@ -127,7 +133,7 @@ class MultiServoIOController:
 
                     if(RUN_IN_SIMULATE == False):
                         if  (OnOff == self.vpump_acts["turn_off"] or OnOff == self.vpump_acts["turn_on"] ):
-                            print("setting io: name: "+str(i)+" onoff: "+str(OnOff)  )
+                            #print("setting io: name: "+str(i)+" onoff: "+str(OnOff)  )
                             
                             leg_name = one_send_data.get_ileg_names(i)
                             
