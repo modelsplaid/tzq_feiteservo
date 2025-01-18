@@ -101,11 +101,16 @@ class MultiServoIOController:
                             # 1. chec if valid
                             if(pos != None):
                                 if mode == "pose":
-                                    svo_cmu_stat = self.servos_ctl.setTorque(800,i)
+                                    if(i == 7 or i==8 or i==9):
+                                        print("mode: ",mode,"servo id: ",i,"pose val: ",pos,"torq: ",torq)
+                                    torq = abs(torq)
+                                    svo_cmu_stat = self.servos_ctl.setTorque(torq,i)
                                     (cmu_expl,err_msg) = self.servos_ctl.writePoseSpeed(pos,spd,i)
 
                                 elif mode == "torq":
                                     print("mode: ",mode,"servo id: ",i,"pose val: ",pos,"torq: ",torq)
+                                    
+                                    # todo: here add pos offset 
                                     svo_cmu_stat = self.servos_ctl.setTorque(torq,i)
                                     (cmu_expl,err_msg) = self.servos_ctl.writePoseSpeed(pos,spd,i)
                                 elif mode == "porq": 
