@@ -108,7 +108,7 @@ class MultiServoIOController:
                                     (cmu_expl,err_msg) = self.servos_ctl.writePoseSpeed(pos,spd,i)
 
                                 elif mode == "torq":
-                                    print("---mode: ",mode,"servo id: ",i,"pose val: ",pos,"torq: ",torq)
+                                    #print("---mode: ",mode,"servo id: ",i,"pose val: ",pos,"torq: ",torq)
                                     
                                     # todo1: check right leg for the compensation
                                     # todo2: improve: compensate less for coxa joint
@@ -125,7 +125,7 @@ class MultiServoIOController:
                                     
                                     [real_pos,_,_,_,_] = glob_servo_pos.get_snd_one_svo(i)
                                 
-                                    print("mode: ",mode,"servo id: ",i,"target pose val: ",pos, "real pos: ", real_pos,"torq: ",torq)
+                                    #print("mode: ",mode,"servo id: ",i,"target pose val: ",pos, "real pos: ", real_pos,"torq: ",torq)
                                 
                                     torq = abs(torq)
                                     svo_cmu_stat = self.servos_ctl.setTorque(torq,i)
