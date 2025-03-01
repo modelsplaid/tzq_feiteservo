@@ -113,10 +113,12 @@ class MultiServoIOController:
                                     # todo1: check right leg for the compensation
                                     # todo2: improve: compensate less for coxa joint
                                     
-                                    if(torq>=0):
-                                        pos = pos+100
-                                    else:
-                                        pos = pos-100                                         
+                                    if(i != 15 and i!=18 and i!=9 and i != 6 and i != 3 and i != 12):
+                                        
+                                        if(torq>=0):
+                                            pos = pos+100
+                                        else:
+                                            pos = pos-100                                         
                                     
                                     svo_cmu_stat = self.servos_ctl.setTorque(torq,i)
                                     (cmu_expl,err_msg) = self.servos_ctl.writePoseSpeed(pos,spd,i)
