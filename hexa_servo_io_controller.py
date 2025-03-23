@@ -106,8 +106,6 @@ class MultiServoIOController:
                                     torq = abs(torq)
                                     svo_cmu_stat = self.servos_ctl.setTorque(torq,i)
                                     (cmu_expl,err_msg) = self.servos_ctl.writePoseSpeed(pos,spd,i)
-                                    if i == 17: 
-                                        print("<<<<<<<<<< right front leg in pose mode, value: ",i)  
 
                                 elif mode == "torq":
                                     #print("---mode: ",mode,"servo id: ",i,"pose val: ",pos,"torq: ",torq)
@@ -115,17 +113,30 @@ class MultiServoIOController:
                                     # todo1: check right leg for the compensation
                                     # todo2: improve: compensate less for coxa joint
                                     
-                                    if(i != 15 and i!=18 and i!=9 and i != 6 and i != 3 and i != 12):
+                                    # if(i != 15 and i!=18 and i!=9 and i != 6 and i != 3 and i != 12):
+                                        
+                                    #     if(torq>=0):
+                                    #         pos = pos+100
+                                    #     else:
+                                    #         pos = pos-100    
+                                            
+                                    # compensate for coxa leg 
+                                    if(i == 13 or i==16 or i==7 or i == 4 or i == 1 or i == 10):
                                         
                                         if(torq>=0):
-                                            pos = pos+100
+                                            pos = pos-100
                                         else:
-                                            pos = pos-100       
-                                            
-                                    if i == 17: 
-                                        print(">>>>>> right front in torq mode, value: ",pos)                            
+                                            pos = pos+100                                       
                                     
-                                    svo_cmu_stat = self.servos_ctl.setTorque(torq,i)
+                                    # compensate for femur leg        
+                                    if(i == 14 or i==17 or i==8 or i == 5 or i == 2 or i == 11):
+                                        
+                                        if(torq>=0):
+                                            pos = pos-100
+                                        else:
+                                            pos = pos+100                                          
+                                    
+                                    svo_cmu_stat = self.servos_ctl.setTorque(abs(torq),i)
                                     (cmu_expl,err_msg) = self.servos_ctl.writePoseSpeed(pos,spd,i)
                                 elif mode == "porq": 
                                     # set current pose to max torq
