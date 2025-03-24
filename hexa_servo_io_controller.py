@@ -89,7 +89,6 @@ class MultiServoIOController:
                     if(one_send_data.get_snd_valid_stat(i) is True):
 
                         [pos,spd,torq,tstmp,mode] = one_send_data.get_snd_one_svo(i)
-                        
 
                         svo_io_msg.set_snd_one_svo(i,pos,spd,torq)
                         svo_cmu_stat = ""
@@ -97,6 +96,8 @@ class MultiServoIOController:
                         err_msg  = ""
                         #print("servo id: ",i,"mode: ",mode,"pose val: ",pos, "spd: ",spd)
                         if RUN_IN_SIMULATE == False:
+                            if(i==11):#(i==8):
+                                print("i= ",i,"mode: ",mode,"torq val:",torq,"pose: ",pose )
                             # todo: check code here on set torq
                             # 1. chec if valid
                             if(pos != None):
